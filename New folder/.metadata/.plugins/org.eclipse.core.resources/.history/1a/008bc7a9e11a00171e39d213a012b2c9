@@ -1,0 +1,11 @@
+package gamelogic;
+
+import java.awt.Image;
+
+public abstract class ChessPiece extends Image {
+	
+	public ChessPiece(){
+		
+	}
+
+}

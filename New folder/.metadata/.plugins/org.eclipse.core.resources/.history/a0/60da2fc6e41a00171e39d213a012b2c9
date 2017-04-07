@@ -1,0 +1,13 @@
+package gamelogic;
+
+import java.awt.Image;
+
+public class ChessPiece  {
+	
+	public Image pieceImage;
+	
+	public ChessPiece(Image image){
+		pieceImage = image;
+	}
+
+}

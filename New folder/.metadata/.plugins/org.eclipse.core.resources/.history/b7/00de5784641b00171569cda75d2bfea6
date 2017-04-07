@@ -1,0 +1,22 @@
+package ui;
+
+import javax.swing.JButton;
+
+public class Square extends JButton {
+	
+	int id = 0;
+	
+	public void SetSquareValues(int i){
+		id = i;
+	}
+	
+	public void OnPressed(int i){
+		id = i;
+	}
+	
+	public Square(){
+		
+	}
+	
+
+}

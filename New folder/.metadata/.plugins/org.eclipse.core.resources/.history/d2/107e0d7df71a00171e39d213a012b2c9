@@ -1,0 +1,13 @@
+package pieces;
+
+import java.awt.Image;
+
+public class ChessPiece  {
+	
+	public Image pieceImage = null;
+	
+	public ChessPiece(Image image){
+		pieceImage = image;
+	}
+
+}

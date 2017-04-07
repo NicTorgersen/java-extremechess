@@ -1,2 +1,0 @@
-# java-extremechess
-Extreme chess
