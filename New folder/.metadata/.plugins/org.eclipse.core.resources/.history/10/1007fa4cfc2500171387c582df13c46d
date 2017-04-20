@@ -1,0 +1,25 @@
+package gamelogic;
+import pieces.ChessPiece;
+import ui.Square;
+
+public class Movement {
+	
+	
+	public void move(Square squarefrom, Square squareto) {
+		ChessPiece piece = squarefrom.getChessPiece();
+		
+		if(moveIsLegal(piece)){
+			
+		}
+		squareto.setNewPiece(piece);
+		squarefrom.removePiece();
+    }
+	
+	private boolean moveIsLegal(ChessPiece piece){
+		if(piece != null){
+			return true;
+		}else{
+			return false;
+		}
+	}
+}

@@ -23,7 +23,7 @@ import javax.swing.border.LineBorder;
 
 import pieces.ChessPiece;
 
-public final class Board {
+public final class Board extends JPanel {
 	
 	 private static final String COLS = "ABCDEFGH";
 	 public static Square[][] square = new Square[8][8];
@@ -37,7 +37,12 @@ public final class Board {
 	        ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK
 	    };
 	    
-	  public final static JPanel SetChessBoard(){
+	    public Board() {
+	    	 JPanel chessBoard = SetChessBoard();
+	    	 //add(chessBoard);
+	    }
+	    
+	  public JPanel SetChessBoard(){
 		    JPanel chessBoard = new JPanel(new GridLayout(0, 9));
 	        chessBoard = new JPanel(new GridLayout(0, 9));
 	        chessBoard.setBorder(new LineBorder(Color.BLACK));
@@ -53,6 +58,7 @@ public final class Board {
 	        //BufferedImage image = ImageIO.read(Board.class.getResourceAsStream("/images/grass.png"));
 	       // Image i = getClass().getResource("/Resources/images/logo.jpg");
 	       // InputStream input = classLoader.getResourceAsStream("image.jpg");
+	        add(chessBoard);
 	        return  chessBoard;
 	    }
 	  
@@ -94,13 +100,12 @@ public final class Board {
 	        }
 	    }
 	  
-	  private static void CreateBoard(JPanel chessBoard){
+	  private void CreateBoard(JPanel chessBoard){
 	    	 // create the chess board squares
 	        Insets buttonMargin = new Insets(0,0,0,0);
 	        for (int ii = 0; ii < square.length; ii++) {
 	            for (int jj = 0; jj < square[ii].length; jj++) {
-	            	Square b = new Square();
-	             	b.SetSquareValues(jj, ii);
+	            	Square b = new Square(jj, ii, this);
 	                b.setMargin(buttonMargin);
 	                // our chess pieces are 64x64 px in size, so we'll
 	                // 'fill this in' using a transparent icon..

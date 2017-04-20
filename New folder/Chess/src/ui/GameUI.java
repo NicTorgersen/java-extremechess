@@ -23,7 +23,7 @@ public class GameUI extends JApplet implements KeyListener, MouseListener, Mouse
 	            "EXTREME CHESS!");
 	    //Panels
 	    public Board board;
-	    private JPanel chessBoard;
+	    //private JPanel chessBoard;
 	    private JPanel Menu;
 	    private JToolBar toolBar;
 	    private static int x = 0;
@@ -37,7 +37,8 @@ public class GameUI extends JApplet implements KeyListener, MouseListener, Mouse
 	        gui.setBorder(new EmptyBorder(5, 5, 5, 5));
 	        gui.add(SetToolBar(), BorderLayout.PAGE_START);
 	        gui.add(SetSideMenu(),BorderLayout.LINE_START);
-	        gui.add(chessBoard = Board.SetChessBoard());
+	        board = new Board();
+	        gui.add(board);
 	    }
 	  
 	  private JToolBar SetToolBar(){
@@ -58,7 +59,7 @@ public class GameUI extends JApplet implements KeyListener, MouseListener, Mouse
 	        return  Menu;
 	    }
 	    public final JComponent getChessBoard() {
-	        return chessBoard;
+	        return board;
 	    }
 
 	    public final JComponent getGui() {

@@ -14,23 +14,47 @@ public class Square extends JButton {
 	
 	private ChessPiece currentPieceOnSquare = null;
 	
-	public void SetSquareValues(int i, int row){
+	public ChessPiece getChessPiece(){
+		return currentPieceOnSquare;
+	}
+	
+	public Square(int i, int row, Board b){
 		id = i;
 		rowNumber = row;
-		
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (isEnabled()) {
-		            System.out.println("Square"+ " " + Integer.toString(id) + " " +"on row" + " " + Integer.toString(row) +" " + "is pressed");
-		        }
-		        if (!isEnabled()) {
-		            System.out.println("Square"+ " " + Integer.toString(id) + " " +"on row" + " " + Integer.toString(row) + " " + "is not pressed");
-		        }
-				
+				SquarePress();
 			}
     	});
+	}
+	
+	public void SetNewChessPiece(ChessPiece p){
+		currentPieceOnSquare = p;
+	}
+	
+	public void RemoveChessPiece(){
+		currentPieceOnSquare.destroyPiece();
+		currentPieceOnSquare = null;
+	}
+	
+	
+	private void SquarePress(){
+		if(HasPiece())
+			return;
 		
+		if (isEnabled()) {
+            System.out.println("Square"+ " " + Integer.toString(id) + " " +"on row" + " " + Integer.toString(rowNumber) +" " + "is pressed");
+        }
+	}
+	
+	private boolean HasPiece(){
+		if(currentPieceOnSquare == null){
+			return false;
+			
+		}else{
+			return true;
+		}
 	}
 	
 	public void OnPressed(int i){

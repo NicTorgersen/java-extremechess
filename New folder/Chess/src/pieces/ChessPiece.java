@@ -10,6 +10,10 @@ public class ChessPiece  {
 		//pieceImage = image;
 	}
 	
+	public void destroyPiece(){
+		//ToDo
+	}
+	
 	public void setImage(Image img){
 		pieceImage = img;
 	}
