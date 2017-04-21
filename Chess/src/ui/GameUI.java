@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -16,11 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
+import gamelogic.ChessGame;
+
 public class GameUI extends JApplet implements KeyListener, MouseListener, MouseMotionListener {
 
 	   private final JPanel gui = new JPanel(new BorderLayout(3, 3));
-	    public final JLabel headermessage = new JLabel(
-	            "EXTREME CHESS!");
+	   public final JLabel headermessage = new JLabel("EXTREME CHESS!");
+	   public final JLabel turnmessage = new JLabel("White's turn");
 	    //Panels
 	    public Board board;
 	    //private JPanel chessBoard;
@@ -29,15 +32,15 @@ public class GameUI extends JApplet implements KeyListener, MouseListener, Mouse
 	    private static int x = 0;
 		   private static int y = 0;
 	
-	public GameUI(){
-		initializeGui();
+	public GameUI(ChessGame cg){
+		initializeGui(cg);
 	}
 	
-	  public final void initializeGui() {
+	  public final void initializeGui(ChessGame cg) {
 	        gui.setBorder(new EmptyBorder(5, 5, 5, 5));
 	        gui.add(SetToolBar(), BorderLayout.PAGE_START);
 	        gui.add(SetSideMenu(),BorderLayout.LINE_START);
-	        board = new Board();
+	        board = new Board(cg);
 	        gui.add(board);
 	    }
 	  
@@ -53,9 +56,14 @@ public class GameUI extends JApplet implements KeyListener, MouseListener, Mouse
 	    private JPanel SetSideMenu(){
 	        Menu = new JPanel();
 	        Menu.setLayout(new BoxLayout(Menu, BoxLayout.Y_AXIS));
-	        Menu.add(new JButton("Exit")); // TODO - add functionality!
+	       JButton exitb = new JButton("Exit");
+	      // exitb.setPreferredSize(new Dimension(180, 180));
+	       exitb.setBounds(0,0,50,80);
+	       
+	        Menu.add(exitb); // TODO - add functionality!
 	        Menu.add(new JButton("Reset")); // TODO - add functionality!
 	        Menu.add(new JButton("Resign")); 
+	        Menu.add(turnmessage);
 	        return  Menu;
 	    }
 	    public final JComponent getChessBoard() {
@@ -79,6 +87,10 @@ public class GameUI extends JApplet implements KeyListener, MouseListener, Mouse
 			 y = e.getY();
 			 System.out.print("test");
 			 headermessage.setText(Integer.toString(y));
+		}
+		
+		public void setTurnMessage(String s){
+			 turnmessage.setText(s);
 		}
 
 		@Override
