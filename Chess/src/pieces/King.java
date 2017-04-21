@@ -7,10 +7,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import pieces.ChessPiece.ChessPieceType;
+
 public class King extends ChessPiece {
 
-	public King(boolean White) {
-		super(White);
+	public King(Boolean white, ChessPieceType type) {
+		super(white, type);
 		  try {
 				BufferedImage image = ImageIO.read(new File("Images/blackpieces/KingBlack.png"));
 			} catch (IOException e) {

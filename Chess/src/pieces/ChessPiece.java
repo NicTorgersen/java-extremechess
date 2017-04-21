@@ -4,9 +4,23 @@ import java.awt.Image;
 
 public class ChessPiece  {
 	
-	public Image pieceImage = null;
+	enum ChessPieceType {
+		PAWN,
+		ROOK,
+		KNIGHT,
+		BISHOP,
+		QUEEN,
+		KING;
+		}
 	
-	public ChessPiece(Boolean White){
+	public ChessPieceType _type;
+	
+	public Image pieceImage = null;
+	private boolean isWhite;
+	
+	public ChessPiece(Boolean white, ChessPieceType type){
+		isWhite = white;
+		_type = type;
 		//pieceImage = image;
 	}
 	
