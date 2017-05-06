@@ -45,11 +45,11 @@ public class Queen extends ChessPiece {
 
 	@Override
 	public String GetImagePathBlack() {
-		return "Images/blackpieces/QueenBlack.png";
+		return "Images" + File.separator + "blackpieces"+ File.separator + "QueenBlack.png";
 	}
 
 	@Override
 	public String GetImagePathWhite() {
-		return "Images/whitepieces/QueenWhite.png";
+		return "Images" + File.separator + "whitepieces"+ File.separator + "QueenWhite.png";
 	}
 }

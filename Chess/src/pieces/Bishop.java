@@ -85,14 +85,13 @@ public class Bishop extends ChessPiece {
 
 	@Override
 	public String GetImagePathBlack() {
-		// TODO Auto-generated method stub
-		return "Images/blackpieces/BishopBlack.png";
+		return "Images" + File.separator + "blackpieces"+ File.separator + "BishopBlack.png";
 	}
 
 
 	@Override
 	public String GetImagePathWhite() {
-		// TODO Auto-generated method stub
-		return "Images/whitepieces/BishopWhite.png";
+		return "Images" + File.separator + "whitepieces"+ File.separator + "BishopWhite.png";
+
 	}
 }

@@ -85,11 +85,11 @@ public class Rook extends ChessPiece {
 
 	@Override
 	public String GetImagePathBlack() {
-		return "Images/blackpieces/RookBlack.png";
+		return "Images" + File.separator + "blackpieces"+ File.separator + "RookBlack.png";
 	}
 
 	@Override
 	public String GetImagePathWhite() {
-		return "Images/whitepieces/RookWhite.png";
+		return "Images" + File.separator + "whitepieces"+ File.separator + "RookWhite.png";
 	}
 }

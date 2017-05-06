@@ -1,6 +1,7 @@
 package pieces;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystem;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -120,12 +121,12 @@ public class King extends ChessPiece {
 
 	@Override
 	public String GetImagePathBlack() {
-		return "Images/blackpieces/KingBlack.png";
+		return "Images" + File.separator + "blackpieces"+ File.separator + "KingBlack.png";
 	}
 
 	@Override
 	public String GetImagePathWhite() {
-		return "Images/whitepieces/KingWhite.png";
+		return "Images" + File.separator + "whitepieces"+ File.separator + "KingWhite.png";
 	}
 
 }
