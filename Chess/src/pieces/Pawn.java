@@ -78,11 +78,11 @@ public class Pawn extends ChessPiece {
 
 	@Override
 	public String GetImagePathBlack() {
-		return "Images" + File.separator + "blackpieces"+ File.separator + "PawnBlack.png";
+		return "Bin" + File.separator + "blackpieces"+ File.separator + "PawnBlack.png";
 	}
 
 	@Override
 	public String GetImagePathWhite() {
-		return "Images" + File.separator + "whitepieces"+ File.separator + "PawnWhite.png";
+		return "Bin" + File.separator + "whitepieces"+ File.separator + "PawnWhite.png";
 	}  
 }

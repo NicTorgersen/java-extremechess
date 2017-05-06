@@ -121,12 +121,12 @@ public class King extends ChessPiece {
 
 	@Override
 	public String GetImagePathBlack() {
-		return "Images" + File.separator + "blackpieces"+ File.separator + "KingBlack.png";
+		return "Bin" + File.separator + "blackpieces"+ File.separator + "KingBlack.png";
 	}
 
 	@Override
 	public String GetImagePathWhite() {
-		return "Images" + File.separator + "whitepieces"+ File.separator + "KingWhite.png";
+		return "Bin" + File.separator + "whitepieces"+ File.separator + "KingWhite.png";
 	}
 
 }

@@ -85,13 +85,13 @@ public class Bishop extends ChessPiece {
 
 	@Override
 	public String GetImagePathBlack() {
-		return "Images" + File.separator + "blackpieces"+ File.separator + "BishopBlack.png";
+		return "Bin" + File.separator + "blackpieces"+ File.separator + "BishopBlack.png";
 	}
 
 
 	@Override
 	public String GetImagePathWhite() {
-		return "Images" + File.separator + "whitepieces"+ File.separator + "BishopWhite.png";
+		return "Bin" + File.separator + "whitepieces"+ File.separator + "BishopWhite.png";
 
 	}
 }

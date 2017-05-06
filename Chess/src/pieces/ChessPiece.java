@@ -112,6 +112,7 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			    System.out.println("Bilde error... finner ikke bilde");
 			}
 	}
 	 @Override
