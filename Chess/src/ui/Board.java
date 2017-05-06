@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -32,9 +33,9 @@ import pieces.Queen;
 import pieces.Rook;
 
 public final class Board extends JPanel {
-	
+	 public static final int BoardSize = 8;
 	 private static final String COLS = "ABCDEFGH";
-	 public static Square[][] square = new Square[8][8];
+	 public static Square[][] square = new Square[BoardSize][BoardSize];
 	 
 	 private static Image[][] chessPieceImages = new Image[2][6];
 	 public static final int BLACK = 0, WHITE = 1;
@@ -59,50 +60,63 @@ public final class Board extends JPanel {
 	        chessBoard = new JPanel(new GridLayout(0, 9));
 	        chessBoard.setBorder(new LineBorder(Color.BLACK));
 	        CreateBoard(chessBoard);
-		    setupNewGame();
+		    //setupNewGame();
 
 	        add(chessBoard);
 	        return  chessBoard;
 	    }
 	  
-	  private final static void setupNewGame() {
+	  public final void setupNewGame() {
 	        //message.setText("Make your move!");
 	        // set up the black pieces
 	        for (int i = 0; i < STARTING_ROW.length; i++) {
 	        	Square s = square[i][0];
-	        	switch(i){
-	        	case 0: square[i][0].add(new Rook(ChessGame.Player.black, s)); break;
-	        	case 1: square[i][0].add(new Knight(ChessGame.Player.black, s)); break;
-	        	case 2: square[i][0].add(new Bishop(ChessGame.Player.black, s)); break;
-	        	case 3: square[i][0].add(new King(ChessGame.Player.black, s)); break;
-	        	case 4: square[i][0].add(new Queen(ChessGame.Player.black, s)); break;
-	        	case 5: square[i][0].add(new Bishop(ChessGame.Player.black, s)); break;
-	        	case 6: square[i][0].add(new Knight(ChessGame.Player.black, s)); break;
-	        	case 7: square[i][0].add(new Rook(ChessGame.Player.black, s)); break;
-	        	}
+	        	ChessGame.Player p = ChessGame.Player.black;
+	        	addFirstRow(i, s, p);
 	        }
 	        for (int i = 0; i < STARTING_ROW.length; i++) {
 	        	Square s = square[i][1];
-	        	square[i][1].add(new Pawn(ChessGame.Player.black, s));
+	        	ChessGame.Player p = ChessGame.Player.black;
+	        	addPawnRow(s, p);
 	        }
 	        // set up the white pieces
 	        for (int i = 0; i < STARTING_ROW.length; i++) {
 	          	Square s = square[i][6];
-	        	square[i][6].add(new Pawn(ChessGame.Player.white, s));
+	          	ChessGame.Player p = ChessGame.Player.white;
+	        	addPawnRow(s, p);
 	        }
 	        for (int i = 0; i < STARTING_ROW.length; i++) {
 	        	Square s = square[i][7];
-	        	switch(i){
-	        	case 0: square[i][7].add(new Rook(ChessGame.Player.white, s)); break;
-	        	case 1: square[i][7].add(new Knight(ChessGame.Player.white, s)); break;
-	        	case 2: square[i][7].add(new Bishop(ChessGame.Player.white, s)); break;
-	        	case 3: square[i][7].add(new King(ChessGame.Player.white, s)); break;
-	        	case 4: square[i][7].add(new Queen(ChessGame.Player.white, s)); break;
-	        	case 5: square[i][7].add(new Bishop(ChessGame.Player.white, s)); break;
-	        	case 6: square[i][7].add(new Knight(ChessGame.Player.white, s)); break;
-	        	case 7: square[i][7].add(new Rook(ChessGame.Player.white, s)); break;
-	        	}
+	        	ChessGame.Player p = ChessGame.Player.white;
+	        	addFirstRow(i, s, p);
+	        
 	        }
+
+	    }
+	  
+	  private void addPawnRow(Square s, ChessGame.Player p){
+		  Pawn pawn = new Pawn(p, s); s.add(pawn); _ChessGame.addPieces(p, pawn);
+	  }
+	  
+	  private void addFirstRow(int i, Square s, ChessGame.Player p){
+		  switch(i){
+	      	case 0: Rook rook = new Rook(p, s); s.add(rook); _ChessGame.addPieces(p, rook); break;
+	      	case 1: Knight knight = new Knight(p, s); s.add(knight); _ChessGame.addPieces(p, knight); break;
+	      	case 2: Bishop bishop = new Bishop(p, s); s.add(bishop); _ChessGame.addPieces(p, bishop); break;
+	      	case 3: King king = new King(p, s); s.add(king); _ChessGame.addPieces(p, king); break;
+	      	case 4: Queen queen = new Queen(p, s); s.add(queen); _ChessGame.addPieces(p, queen); break;
+	      	case 5: Bishop bishop2 = new Bishop(p, s); s.add(bishop2); _ChessGame.addPieces(p, bishop2); break;
+	      	case 6: Knight knight2 = new Knight(p, s); s.add(knight2); _ChessGame.addPieces(p, knight2); break;
+	      	case 7: Rook rook2 = new Rook(p, s); s.add(rook2); _ChessGame.addPieces(p, rook2); break;
+	      	}
+	  }
+	  
+	  public Square getSquare(int row, int column) {
+	        Square squ = null;
+	        if (row < BoardSize && column < BoardSize && row >= 0 && column >= 0) {
+	            squ = square[row][column];
+	        }
+	        return squ;
 	    }
 	  
 	  private void CreateBoard(JPanel chessBoard){
@@ -116,16 +130,18 @@ public final class Board extends JPanel {
 		                        || (jj % 2 == 0 && ii % 2 == 0)) {
 	            			b = new Square(jj, ii, this,Color.WHITE);
 		                    b.setBackground(Color.WHITE);
+		                    b.setBorder(BorderFactory.createMatteBorder(0,2,2,2, Color.black)); 
 		                } else {
 		                	b = new Square(jj, ii, this,Color.BLACK);
 		                    b.setBackground(Color.BLACK);
+		                    b.setBorder(BorderFactory.createMatteBorder(0,2,2,2, Color.black)); 
 		                }
 	            
 	                 b.setPreferredSize(new Dimension(70, 70));
 	                // our chess pieces are 64x64 px in size, so we'll
 	                // 'fill this in' using a transparent icon..
-	                ImageIcon icon = new ImageIcon(
-	                        new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+	               // ImageIcon icon = new ImageIcon(
+	               //         new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
 	           //     b.setIcon(icon);
 	              
 	                square[jj][ii] = b;
@@ -135,11 +151,10 @@ public final class Board extends JPanel {
 	        //fill the chess board
 	        chessBoard.add(new JLabel(""));
 	        // fill the top row
-	        for (int ii = 0; ii < 8; ii++) {
-	            chessBoard.add(
-	                    new JLabel(COLS.substring(ii, ii + 1),
-	                    SwingConstants.CENTER));
+	        for (int i = 0; i < 8; i++) {
+	            chessBoard.add(new JLabel(COLS.substring(i, i + 1),SwingConstants.CENTER));
 	        }
+	  
 	        // fill the black non-pawn piece row
 	        for (int ii = 0; ii < 8; ii++) {
 	            for (int jj = 0; jj < 8; jj++) {
@@ -147,10 +162,18 @@ public final class Board extends JPanel {
 	                    case 0:
 	                        chessBoard.add(new JLabel("" + (ii + 1),
 	                                SwingConstants.CENTER));
+	                    //case 9:
+	                       // chessBoard.add(new JLabel("" + (ii + 1),
+	                        //        SwingConstants.CENTER));
 	                    default:
 	                        chessBoard.add(square[jj][ii]);
 	                }
 	            }
+	        }
+	        chessBoard.add(new JLabel(""));
+	        
+	        for (int i = 0; i < 8; i++) {
+	            chessBoard.add(new JLabel(COLS.substring(i, i + 1),SwingConstants.CENTER));
 	        }
 	    }
 

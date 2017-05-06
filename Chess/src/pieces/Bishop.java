@@ -2,6 +2,7 @@ package pieces;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
@@ -30,5 +31,17 @@ public class Bishop extends ChessPiece {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	}
+
+	@Override
+	public Collection<Square> getPossibleMoves() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<Square> generatePossibleMoves() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

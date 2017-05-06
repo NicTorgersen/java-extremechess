@@ -9,6 +9,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -20,14 +23,22 @@ import gamelogic.Player;
 import ui.Board;
 import ui.Square;
 
-public class ChessPiece extends JPanel implements MouseListener  {
+public abstract class ChessPiece extends JPanel implements MouseListener  {
 	
 	public ChessGame.Player player;
 	protected BufferedImage pieceImage = null;
 	private ChessGame chessGame;
 	public Piecetype piecetype;
 	
+	
+    public abstract Collection<Square> getPossibleMoves();
+
+    public abstract Collection<Square> generatePossibleMoves();
+
+	
 	private Square currentSquare;
+	
+	//private Collection<Square> getPossibleMoves();
 	
 	public enum Piecetype{
 		pawn, 
@@ -38,11 +49,19 @@ public class ChessPiece extends JPanel implements MouseListener  {
 		king
 	}
 	
+    public Square getSquare() {
+        return currentSquare;
+    }
+	
+
+	
 	public ChessPiece(ChessGame.Player p, Square sq){
+	 
       setOpaque(false);
       addMouseListener(this);
       setPreferredSize(new Dimension(70, 70));
       setType();
+      sq.SetNewChessPiece(this);
       player = p;
       currentSquare = sq;
       
@@ -77,28 +96,87 @@ public class ChessPiece extends JPanel implements MouseListener  {
 
 	public void removePieceFromPlayer() {
 		chessGame.removePiece(player, this);
+		currentSquare.remove(this);
+		//chessGame.setSelectedPiece(chessGame.getSelectedPiece());
+
+		currentSquare.getBoard().repaint();
+	}
+	
+	public void ResetPiece(){
+		//chessGame.removePiece(player, this);
+		currentSquare.remove(this);
+		//currentSquare.getBoard().repaint();
 	}
 	
 	public void movePiece(Square sq){
 		Square oldSquare = currentSquare;
 		oldSquare.setColorToInitial();
+		oldSquare.RemoveChessPiece();
+		sq.SetNewChessPiece(this);
 		currentSquare = sq;
 		sq.add(this);
 		sq.getBoard().repaint();
 		chessGame.switchTurn();
+		
+		
+		 for (Square fruit : getPossibleMoves()) {
+	        	fruit.setColorToInitial();
+	            // fruit is an element of the `fruits` array.
+	        }
 	}
 	
-	private void PiecePressed(){
- 
-		currentSquare.setBackground(Color.YELLOW);
-        chessGame.setSelectedPiece(this);
+	public void DeselectPiece(){
+		 chessGame.setSelectedPiece(null);
+		 currentSquare.setColorToInitial();
+		 for (Square fruit : getPossibleMoves()) {
+	        	fruit.setColorToInitial();
+	            // fruit is an element of the `fruits` array.
+	        }
 	}
+	
+	private void piecePressed(){
+		
+		//if(chessGame.playerHasSelectedPiece() && chessGame._PlayersTurn != this.player){
+		if(chessGame.playerHasSelectedPiece() && isOpponent(chessGame.getSelectedPiece())){
+				if(chessGame.getSelectedPiece().getPossibleMoves().contains(this.currentSquare)){
+					if(chessGame.playerHasSelectedPiece()){
+							chessGame.getSelectedPiece().movePiece(this.currentSquare);
+						}
+					removePieceFromPlayer();
+			}
+		} 
+		else if(chessGame._PlayersTurn == this.player) {
+			
+			if(chessGame.playerHasSelectedPiece()){
+				chessGame.getSelectedPiece().DeselectPiece();
+			}
+			
+			currentSquare.setBackground(Color.YELLOW);
+	        chessGame.setSelectedPiece(this);
+	        Collection<Square> s =  generatePossibleMoves();
+	        
+	        for (Square fruit : s) {
+	        	fruit.setColorAsGreen();
+	        	
+	        	if(isOpponent(fruit.getPiece())){
+	        		fruit.setColorAsRed();
+		        	
+	        	}
+	            // fruit is an element of the `fruits` array.
+	        }
+		}	
+	}
+	
+	public boolean isOpponent(ChessPiece piece) {
+        return piece != null && player == ChessGame.Player.white != (piece.player == ChessGame.Player.white);
+       // return piece != null && isWhite() != piece.isWhite();
+    }
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(chessGame._PlayersTurn == this.player){
-			PiecePressed();
-		}
+	//	if(chessGame._PlayersTurn == this.player){
+			piecePressed();
+	//	}
 
 	}
 
@@ -125,5 +203,7 @@ public class ChessPiece extends JPanel implements MouseListener  {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 
 }

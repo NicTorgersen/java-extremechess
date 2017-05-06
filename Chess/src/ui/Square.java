@@ -14,8 +14,11 @@ import pieces.ChessPiece;
 
 public class Square extends JPanel implements MouseListener {
 	
-	int id = 0;
-	int rowNumber = 0;
+	public int id = 0;
+	public int rowNumber = 0;
+	
+  //  public final int ROW;
+  // public final int COLUMN;
 	
 	private Board board;
 	
@@ -37,18 +40,12 @@ public class Square extends JPanel implements MouseListener {
 		board = b;
 		initialColor = c;
 		addMouseListener(this);
-		
-	//	addActionListener(new ActionListener() {
-	//		@Override
-		//	public void actionPerformed(ActionEvent arg0) {
-		//		SquarePress();
-		//	}
-    	//});
 	}
 	
 	//Sets new piece and checks if should remove an old piece
 	public void SetNewChessPiece(ChessPiece piece){
 		
+
 		if(currentPieceOnSquare != null && piece.player != currentPieceOnSquare.player){
 			currentPieceOnSquare.removePieceFromPlayer();
 		}
@@ -56,55 +53,51 @@ public class Square extends JPanel implements MouseListener {
 		currentPieceOnSquare = piece;
 	}
 	
-	public void RemoveChessPiece(){
-		currentPieceOnSquare = null;
-	}
-	
+    public void setColorAsRed(){
+        System.out.println("Red");
+    	setBackground(Color.RED);
+    }
+    public void setColorAsGreen(){
+    	setBackground(Color.GREEN);
+    }
+    
 	public void setColorToInitial(){
 		setBackground(initialColor);
 	}
 	
-	private void SquarePress(){
-		
-		if(board._ChessGame.getSelectedPiece() != null){
-			board._ChessGame.getSelectedPiece().movePiece(this);
-			//add(board._ChessGame.getSelectedPiece());
-			//board.repaint();
-			//board._ChessGame.getSelectedPiece().repaint();
-	       //  System.out.println("hm2");
+	public void RemoveChessPiece(){
+		currentPieceOnSquare = null;
+	}
+	
+
+	
+	 public ChessPiece getPiece() {
+	        return currentPieceOnSquare;
+	    }
+	
+	private void SquarePress(MouseEvent e){
+		if(board._ChessGame.playerHasSelectedPiece()){
+			if(board._ChessGame.getSelectedPiece().getPossibleMoves().contains(this)){
+				board._ChessGame.getSelectedPiece().movePiece(this);
+			}
+	
+		} else if(currentPieceOnSquare != null){
+			currentPieceOnSquare.mouseClicked(e);
 		}
-		
-		
-		//if (isEnabled()) {
-            System.out.println("Square"+ " " + Integer.toString(id) + " " +"on row" + " " + Integer.toString(rowNumber) +" " + "is pressed");
-       // }
-		
-		if(!HasPiece())
-			return;
-	}
-	
-	private boolean HasPiece(){
-		if(currentPieceOnSquare == null){
-			return false;
-			
-		}else{
-			return true;
-		}
-	}
-	
-	public void OnPressed(int i){
-		id = i;
-	}
-	
-	public Square(){
-		
+        System.out.println("Square"+ " " + Integer.toString(id) + " " +"on row" + " " + Integer.toString(rowNumber) +" " + "is pressed");
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		SquarePress();
+		if(currentPieceOnSquare == null){
+			SquarePress(e);
+		}
 	}
+	
+	 public Square neighbour( int column, int row) {
+	        return board.getSquare(id + row, rowNumber + column);
+	    }
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
