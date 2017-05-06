@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import gamelogic.ChessGame.Player;
 import pieces.ChessPiece;
+import pieces.King;
 import ui.GameUI;
 import ui.Square;
 
@@ -19,7 +21,11 @@ public final class ChessGame {
 	
 	private ChessPiece selectedChessPiece;
 	
+	private King whiteKing;
+	private King blackKing;
+	
 	public Player _PlayersTurn;
+	public Boolean kingIsInCheck = false;
 	
 	public List<ChessPiece> getPieces(Player p){
 		if(p == Player.white){
@@ -111,20 +117,59 @@ public final class ChessGame {
 	public void setSelectedPiece(ChessPiece piece){
 		selectedChessPiece = piece;
 		if(selectedChessPiece != null){
-		    System.out.println("SelectedChessPiece" + " " + "is" + " " + piece.player.toString() + " " + piece.piecetype.toString());
+		    System.out.println("SelectedChessPiece" + " " + "is" + " " + piece.player.toString() + " " + piece.GetPieceType().toString());
 		}
      }
+	
+	public void SetKing(Player p, King king){
+		if(p == Player.white){
+			whiteKing = king;
+		} else{
+			blackKing = king;
+		}
+	}
+	
+	public King getWhiteKing(){
+		if(whiteKing != null){
+			  System.out.println("Henter hvit konge");
+		}
+
+		return whiteKing;
+	}
+	
+	public King getBlackKing(){
+		return blackKing;
+	}
 
 	public void switchTurn() {
 		
-		if(_PlayersTurn == Player.white){
-			_PlayersTurn = Player.black;
-		}else{
-			_PlayersTurn = Player.white;
-		}
 		setSelectedPiece(null);
 	    System.out.println("Switching");
 	    gameUI.setTurnMessage(_PlayersTurn.toString()+"'"+"s" + " "+ "turn");
+		
+		if(_PlayersTurn == Player.white){
+			_PlayersTurn = Player.black;
+            if(getBlackKing().checkIfKingIsInCheck()){
+                JOptionPane.showMessageDialog(this.gameUI, "Black King in check");
+                kingIsInCheck = true;
+                getBlackKing().Autoselect();
+            	  System.out.println("Black is in check");
+			}else{
+				 kingIsInCheck = false;
+			}
+		}else{
+			_PlayersTurn = Player.white;
+			if(getWhiteKing().checkIfKingIsInCheck()){
+                JOptionPane.showMessageDialog(this.gameUI, "White King in check");
+                kingIsInCheck = true;
+                getWhiteKing().Autoselect();
+				  System.out.println("White is in check");
+			}else{
+				   kingIsInCheck = false;
+			}
+	
+		}
+
 		// TODO Auto-generated method stub
 		
 	}

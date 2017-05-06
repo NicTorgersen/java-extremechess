@@ -12,36 +12,44 @@ import ui.Square;
 
 public class Queen extends ChessPiece {
 
-	public Queen(ChessGame.Player p, Square sq) {
-		super(p, sq);
+	public Queen(ChessGame.Player p, Square sq, Boolean isVirtual) {
+		super(p, sq, isVirtual);
 	}
 	
-	protected void setType(){
-		 piecetype = Piecetype.queen;
-	}
-	
-	protected void setImage(){
-		 try {
-			 if(player == ChessGame.Player.black){
-					pieceImage = ImageIO.read(new File("Images/blackpieces/QueenBlack.png"));
-			 }else{
-					pieceImage = ImageIO.read(new File("Images/whitepieces/QueenWhite.png"));
-			 }
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	}
 
-	@Override
-	public Collection<Square> getPossibleMoves() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public Collection<Square> generatePossibleMoves() {
+	     possibleMoves.clear();
+	     AttackMoves.clear();
+	     ChessPiece[] pieces = {
+	    		new Rook(this.player, this.getSquare(), true),
+	    		new Bishop(this.player, this.getSquare(), true), 
+	        };
+	        for (ChessPiece piece : pieces) {
+	            //piece.setSquare(getSquare());
+	                possibleMoves.addAll(piece.generatePossibleMoves());
+
+	
+	        }
+	        AttackMoves = possibleMoves;
+	        return possibleMoves;
+	}
+
+	@Override
+	public Piecetype GetPieceType() {
 		// TODO Auto-generated method stub
-		return null;
+		return  piecetype = Piecetype.queen;
+	}
+
+	@Override
+	public String GetImagePathBlack() {
+		return "Images/blackpieces/QueenBlack.png";
+	}
+
+	@Override
+	public String GetImagePathWhite() {
+		return "Images/whitepieces/QueenWhite.png";
 	}
 }

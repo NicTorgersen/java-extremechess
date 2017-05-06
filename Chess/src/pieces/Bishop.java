@@ -7,41 +7,92 @@ import java.util.Collection;
 import javax.imageio.ImageIO;
 
 import gamelogic.ChessGame;
+
 import pieces.ChessPiece.Piecetype;
 import ui.Square;
 
 public class Bishop extends ChessPiece {
 
-	public Bishop(ChessGame.Player p, Square sq) {
-		super(p, sq);
+	public Bishop(ChessGame.Player p, Square sq, Boolean isVirtual) {
+		super(p, sq, isVirtual);
 	}
 	
-	protected void setType(){
-		 piecetype = Piecetype.bishop;
-	}
-	
-	protected void setImage(){
-		 try {
-			 if(player == ChessGame.Player.black){
-					pieceImage = ImageIO.read(new File("Images/blackpieces/BishopBlack.png")); 
-			 } else{
-					pieceImage = ImageIO.read(new File("Images/whitepieces/BishopWhite.png")); 
-			 }
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	}
-
-	@Override
-	public Collection<Square> getPossibleMoves() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public Collection<Square> generatePossibleMoves() {
+		 int row = super.getSquare().rowNumber;
+	        int column = super.getSquare().id;
+	        possibleMoves.clear();
+	        AttackMoves.clear();
+	        //all possible moves in the down positive diagonal
+	        for (int j = column + 1, i = row + 1; j < ChessGame.gameUI.board.BoardSize && i < ChessGame.gameUI.board.BoardSize; j++, i++) {
+	            Square square = super.getSquare().getBoardSquare(i, j);
+	            if (square.getPiece() == null) {
+	                possibleMoves.add(square);
+	            } else if (isOpponent(square.getPiece())) {
+	                possibleMoves.add(square);
+	                break;
+	            } else {
+	                break;
+	            }
+	        }
+	        //all possible moves in the up positive diagonal
+	        for (int j = column - 1, i = row + 1; j > -1 && i < ChessGame.gameUI.board.BoardSize; j--, i++) {
+	            Square square = super.getSquare().getBoardSquare(i, j);
+	            if (square.getPiece() == null) {
+	                possibleMoves.add(square);
+	            } else if (isOpponent(square.getPiece())) {
+	                possibleMoves.add(square);
+	                break;
+	            } else {
+	                break;
+	            }
+	        }
+	        //all possible moves in the up negative diagonal
+	        for (int j = column - 1, i = row - 1; j > -1 && i > -1; j--, i--) {
+	            Square square = super.getSquare().getBoardSquare(i, j);
+	            if (square.getPiece() == null) {
+	                possibleMoves.add(square);
+	            } else if (isOpponent(square.getPiece())) {
+	                possibleMoves.add(square);
+	                break;
+	            } else {
+	                break;
+	            }
+	        }
+	        //all possible moves in the down negative diagonal
+	        for (int j = column + 1, i = row - 1; j < ChessGame.gameUI.board.BoardSize && i > -1; j++, i--) {
+	            Square square = super.getSquare().getBoardSquare(i, j);
+	            if (square.getPiece() == null) {
+	                possibleMoves.add(square);
+	            } else if (isOpponent(square.getPiece())) {
+	                possibleMoves.add(square);
+	                break;
+	            } else {
+	                break;
+	            }
+	        }
+	        AttackMoves = possibleMoves;
+	        return possibleMoves;
+	}
+
+	@Override
+	public Piecetype GetPieceType() {
 		// TODO Auto-generated method stub
-		return null;
+		return  piecetype = Piecetype.bishop;
+	}
+
+
+	@Override
+	public String GetImagePathBlack() {
+		// TODO Auto-generated method stub
+		return "Images/blackpieces/BishopBlack.png";
+	}
+
+
+	@Override
+	public String GetImagePathWhite() {
+		// TODO Auto-generated method stub
+		return "Images/whitepieces/BishopWhite.png";
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Collection;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -22,6 +23,8 @@ public class Square extends JPanel implements MouseListener {
 	
 	private Board board;
 	
+
+	
 	private ChessPiece currentPieceOnSquare = null;
 	private Color initialColor;
 	
@@ -33,6 +36,8 @@ public class Square extends JPanel implements MouseListener {
 		return board;
 
 	}
+	
+	
 		
 	public Square(int i, int row, Board b, Color c){
 		id = i;
@@ -97,6 +102,10 @@ public class Square extends JPanel implements MouseListener {
 	
 	 public Square neighbour( int column, int row) {
 	        return board.getSquare(id + row, rowNumber + column);
+	    }
+	 
+	 public Square getBoardSquare(int column, int row) {
+	        return board.getSquare(row, column);
 	    }
 
 	@Override

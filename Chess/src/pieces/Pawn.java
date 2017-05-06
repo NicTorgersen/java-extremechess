@@ -1,5 +1,6 @@
 package pieces;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,38 +14,15 @@ import ui.Square;
 
 public class Pawn extends ChessPiece {
 	
-	 Collection<Square> possibleMoves;
 
-	public Pawn(ChessGame.Player p, Square sq) {
-		super(p, sq);
+	public Pawn(ChessGame.Player p, Square sq, Boolean isVirtual) {
+		super(p, sq, isVirtual);
 	}
 	
-	protected void setType(){
-		 piecetype = Piecetype.pawn;
-		 possibleMoves = new ArrayList<>();
-	}
-	
-	protected void setImage(){
-		 try {
-			 if(player == ChessGame.Player.black){
-					pieceImage = ImageIO.read(new File("Images/blackpieces/PawnBlack.png"));
-			 }else{
-					pieceImage = ImageIO.read(new File("Images/whitepieces/PawnWhite.png"));
-			 }
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	}
-
-	 @Override
-	    public Collection<Square> getPossibleMoves() {
-	        return possibleMoves;
-	    }
-
 	 @Override
 	    public Collection<Square> generatePossibleMoves() {
 	        possibleMoves.clear();
+	        AttackMoves.clear();
 	        boolean color = super.player == ChessGame.Player.white;
 	        int dx = color ? -1 : 1;
 
@@ -65,35 +43,46 @@ public class Pawn extends ChessPiece {
 	        }
 	        Square aheadLeft = super.getSquare().neighbour(dx, -1);
 	        if(aheadLeft != null){
-	            System.out.println("Left" + aheadLeft.rowNumber + "rom" + aheadLeft.id + "id");
+	        	AttackMoves.add(aheadLeft);
+	        	 if (aheadLeft.getPiece() != null && isOpponent(aheadLeft.getPiece())) {
+	 	            System.out.println("Left enemy");
+	 	            possibleMoves.add(aheadLeft);
+	 	        }
 	        }
 	        
-	     //   if(aheadLeft.getPiece() != null){
-	     //       System.out.println("Har brikke");
-	       // }else{
-	      //  	  System.out.println("Har ikke brikke");
-	       // }
 	        
-	        if (aheadLeft != null && aheadLeft.getPiece() != null && isOpponent(aheadLeft.getPiece())) {
-	        	//aheadLeft.setColorAsRed();
-	            System.out.println("Left enemy");
-	            possibleMoves.add(aheadLeft);
-	        }
+	       
 	        Square aheadRight = super.getSquare().neighbour(dx, 1);
-	        if (aheadRight != null && aheadRight.getPiece() != null && isOpponent(aheadRight.getPiece())) {
-	        	//aheadLeft.setColorAsRed();
-	        	System.out.println("Right enemy");
-	            possibleMoves.add(aheadRight);
+	        if(aheadRight != null){
+	         	AttackMoves.add(aheadRight);
+	         	  if (aheadRight.getPiece() != null && isOpponent(aheadRight.getPiece())) {
+	  	        	System.out.println("Right enemy");
+	  	         	AttackMoves.add(aheadRight);
+	  	            possibleMoves.add(aheadRight);
+	  	        }
+	  	        
 	        }
 	        
+	      
 	        if(possibleMoves.size() > 0){
 
 	        	   System.out.println(possibleMoves.size());
 	        }
-	   
-	    	
 	        return possibleMoves;
 	    }
-	 
-	 
+
+	@Override
+	public Piecetype GetPieceType() {
+		return  piecetype = Piecetype.pawn;
+	}
+
+	@Override
+	public String GetImagePathBlack() {
+		return "Images/blackpieces/PawnBlack.png";
+	}
+
+	@Override
+	public String GetImagePathWhite() {
+		return "Images/whitepieces/PawnWhite.png";
+	}  
 }

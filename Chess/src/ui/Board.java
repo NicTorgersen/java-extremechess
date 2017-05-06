@@ -95,19 +95,19 @@ public final class Board extends JPanel {
 	    }
 	  
 	  private void addPawnRow(Square s, ChessGame.Player p){
-		  Pawn pawn = new Pawn(p, s); s.add(pawn); _ChessGame.addPieces(p, pawn);
+		  Pawn pawn = new Pawn(p, s, false); s.add(pawn); _ChessGame.addPieces(p, pawn);
 	  }
 	  
 	  private void addFirstRow(int i, Square s, ChessGame.Player p){
 		  switch(i){
-	      	case 0: Rook rook = new Rook(p, s); s.add(rook); _ChessGame.addPieces(p, rook); break;
-	      	case 1: Knight knight = new Knight(p, s); s.add(knight); _ChessGame.addPieces(p, knight); break;
-	      	case 2: Bishop bishop = new Bishop(p, s); s.add(bishop); _ChessGame.addPieces(p, bishop); break;
-	      	case 3: King king = new King(p, s); s.add(king); _ChessGame.addPieces(p, king); break;
-	      	case 4: Queen queen = new Queen(p, s); s.add(queen); _ChessGame.addPieces(p, queen); break;
-	      	case 5: Bishop bishop2 = new Bishop(p, s); s.add(bishop2); _ChessGame.addPieces(p, bishop2); break;
-	      	case 6: Knight knight2 = new Knight(p, s); s.add(knight2); _ChessGame.addPieces(p, knight2); break;
-	      	case 7: Rook rook2 = new Rook(p, s); s.add(rook2); _ChessGame.addPieces(p, rook2); break;
+	      	case 0: Rook rook = new Rook(p, s, false); s.add(rook); _ChessGame.addPieces(p, rook); break;
+	      	case 1: Knight knight = new Knight(p, s, false); s.add(knight); _ChessGame.addPieces(p, knight); break;
+	      	case 2: Bishop bishop = new Bishop(p, s, false); s.add(bishop); _ChessGame.addPieces(p, bishop); break;
+	      	case 3: King king = new King(p, s, false); _ChessGame.SetKing(p, king); s.add(king); _ChessGame.addPieces(p, king); break;
+	      	case 4: Queen queen = new Queen(p, s, false); s.add(queen); _ChessGame.addPieces(p, queen); break;
+	      	case 5: Bishop bishop2 = new Bishop(p, s, false); s.add(bishop2); _ChessGame.addPieces(p, bishop2); break;
+	      	case 6: Knight knight2 = new Knight(p, s, false); s.add(knight2); _ChessGame.addPieces(p, knight2); break;
+	      	case 7: Rook rook2 = new Rook(p, s, false); s.add(rook2); _ChessGame.addPieces(p, rook2); break;
 	      	}
 	  }
 	  

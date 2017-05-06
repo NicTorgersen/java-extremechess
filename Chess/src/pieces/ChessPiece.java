@@ -24,17 +24,29 @@ import ui.Board;
 import ui.Square;
 
 public abstract class ChessPiece extends JPanel implements MouseListener  {
-	
+	protected Collection<Square> possibleMoves;
+	protected Collection<Square> AttackMoves;
 	public ChessGame.Player player;
+	
 	protected BufferedImage pieceImage = null;
-	private ChessGame chessGame;
-	public Piecetype piecetype;
+    //public abstract BufferedImage SetImageNew();
 	
 	
-    public abstract Collection<Square> getPossibleMoves();
+	protected ChessGame chessGame;
+
+	
+	
+    //public abstract Collection<Square> getPossibleMoves();
 
     public abstract Collection<Square> generatePossibleMoves();
 
+	public Piecetype piecetype;
+    public abstract Piecetype GetPieceType();
+    
+    public String ImagePath_Black;
+    public String ImagePath_White;
+    public abstract String GetImagePathBlack();
+    public abstract String GetImagePathWhite();
 	
 	private Square currentSquare;
 	
@@ -52,41 +64,56 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
     public Square getSquare() {
         return currentSquare;
     }
+    public void setSquare(Square s) {
+       currentSquare = s;
+    }
+    
+    public Collection<Square> getAttackMoves() {
+	    return AttackMoves;
+	}
+    
+	public Collection<Square> getPossibleMoves() {
+	    return possibleMoves;
+	}
 	
-
 	
-	public ChessPiece(ChessGame.Player p, Square sq){
-	 
-      setOpaque(false);
-      addMouseListener(this);
-      setPreferredSize(new Dimension(70, 70));
-      setType();
-      sq.SetNewChessPiece(this);
-      player = p;
-      currentSquare = sq;
+	public ChessPiece(ChessGame.Player p, Square sq, Boolean isVirtual){
+	  possibleMoves = new ArrayList<>();
+	  AttackMoves = new ArrayList<>();
+	  player = p;
+	  setSquare(sq);
+	  
+	  if(!isVirtual){
+		      setOpaque(false);
+		      addMouseListener(this);
+		      setPreferredSize(new Dimension(70, 70));
+		      sq.SetNewChessPiece(this);
+		      setImage();
+	  }
+ 
+   
       
       if(sq.getBoard()._ChessGame != null){
           chessGame = sq.getBoard()._ChessGame;
 
       }
 
-      setImage();
+      generatePossibleMoves();
 
 	}
 	
-	protected void setType(){
-	  piecetype = Piecetype.rook;
-	}
-	
-	protected void setImage(){
-		  try {
-				pieceImage = ImageIO.read(new File("Images/blackpieces/KingBlack.png"));
+	private void setImage(){
+		 try {
+			 if(player == ChessGame.Player.black){
+					pieceImage = ImageIO.read(new File(GetImagePathBlack()));
+			 }else{
+					pieceImage = ImageIO.read(new File(GetImagePathWhite()));
+			 }
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
-		
 	 @Override
 	    protected void paintComponent(Graphics g) {
 	        super.paintComponent(g);
@@ -113,16 +140,18 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 		oldSquare.setColorToInitial();
 		oldSquare.RemoveChessPiece();
 		sq.SetNewChessPiece(this);
-		currentSquare = sq;
+		setSquare(sq);
 		sq.add(this);
 		sq.getBoard().repaint();
-		chessGame.switchTurn();
+
 		
 		
 		 for (Square fruit : getPossibleMoves()) {
 	        	fruit.setColorToInitial();
 	            // fruit is an element of the `fruits` array.
 	        }
+		 generatePossibleMoves();
+	     chessGame.switchTurn();
 	}
 	
 	public void DeselectPiece(){
@@ -134,7 +163,15 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 	        }
 	}
 	
+	public void Autoselect(){
+		piecePressed();
+	}
+	
 	private void piecePressed(){
+		
+		if(chessGame.kingIsInCheck && this.piecetype != piecetype.king ){
+			return;
+		}
 		
 		//if(chessGame.playerHasSelectedPiece() && chessGame._PlayersTurn != this.player){
 		if(chessGame.playerHasSelectedPiece() && isOpponent(chessGame.getSelectedPiece())){
