@@ -38,6 +38,12 @@ public class Knight extends ChessPiece {
                 possibleMoves.add(square);
             }
             
+            if(square != null && square.getPiece() != null){
+            	if(!isOpponent(square.getPiece())){
+            	 	BlockedMoves.add(square);
+            	}
+            }
+            
             if(square != null){
                 AttackMoves.add(square);
             }

@@ -66,6 +66,10 @@ public class Square extends JPanel implements MouseListener {
     	setBackground(Color.GREEN);
     }
     
+    public void setColorAsGray(){
+    	setBackground(Color.GRAY);
+    }
+    
 	public void setColorToInitial(){
 		setBackground(initialColor);
 	}

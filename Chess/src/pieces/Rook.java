@@ -16,61 +16,134 @@ public class Rook extends ChessPiece {
 		super(p, sq, isVirtual);
 	}
 	
+	
 
-
+	
 
 	@Override
 	public Collection<Square> generatePossibleMoves() {
 		  int row = super.getSquare().rowNumber;
 	        int column = super.getSquare().id;
-	        possibleMoves.clear();
-	        AttackMoves.clear();
+	       // possibleMoves.clear();
+	       // AttackMoves.clear();
+	       // BlockedMoves.clear();
 	        //all possible moves in the up
+	        boolean allPossibleUpMovesFound = false;
+	        boolean upMovesBlockedByKing = false;
 	        for (int i = row + 1; i < ChessGame.gameUI.board.BoardSize; i++) {
-	            Square square = super.getSquare().getBoardSquare(i, column);
-	            if (square.getPiece() == null) {
-	                possibleMoves.add(square);
-	            } else if (isOpponent(square.getPiece())) {
-	                possibleMoves.add(square);
-	                break;
-	            } else {
-	                break;
+	         	Square square = super.getSquare().getBoardSquare(i, column);
+	        	if(allPossibleUpMovesFound){
+	        		BlockedMoves.add(square);
+	        		if(upMovesBlockedByKing){
+	        			BlockedByKingMoves.add(square);
+	        		}
 	            }
+	        	else{
+	            	   if (square.getPiece() == null) {
+	   	                possibleMoves.add(square);
+	   	            } else if (isOpponent(square.getPiece())) {
+	   	            	if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            		upMovesBlockedByKing = true;
+	   	            	}
+	   	                possibleMoves.add(square);
+	   	                allPossibleUpMovesFound = true;
+	   	            }else if (!isOpponent(square.getPiece())) {
+	   	                allPossibleUpMovesFound = true;
+	   	                AttackMoves.add(square);
+	   	         	    BlockedMoves.add(square);
+	   	            } else {
+	   	            	allPossibleUpMovesFound = true;
+	   	            }
+	            }
+	        	
+	       
+	         
 	        }
 	        //all possible moves in the down
+	        boolean allPossibledownMovesFound = false;
+	        boolean downMovesBlockedByKing = false;
 	        for (int i = row - 1; i > -1; i--) {
 	            Square square = super.getSquare().getBoardSquare(i, column);
-	            if (square.getPiece() == null) {
-	                possibleMoves.add(square);
-	            } else if (isOpponent(square.getPiece())) {
-	                possibleMoves.add(square);
-	                break;
-	            } else {
-	                break;
+	            if(allPossibledownMovesFound){
+	        		BlockedMoves.add(square);
+	        		if(downMovesBlockedByKing){
+	        			BlockedByKingMoves.add(square);
+	        		}
+	            }
+	        	else{
+	            	   if (square.getPiece() == null) {
+	   	                possibleMoves.add(square);
+	   	            } else if (isOpponent(square.getPiece())) {
+	   	            	if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            		downMovesBlockedByKing = true;
+	   	            	}
+	   	                possibleMoves.add(square);
+	   	             allPossibledownMovesFound = true;
+	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            	allPossibledownMovesFound = true;
+	   	         	    BlockedMoves.add(square);
+	   	         	    AttackMoves.add(square);
+	   	            } else {
+	   	            	allPossibledownMovesFound = true;
+	   	            }
 	            }
 	        }
 	        //all possible moves to the right
+	        boolean allPossiblerightMovesFound = false;
+	        boolean rightMovesBlockedByKing = false;
 	        for (int i = column + 1; i < ChessGame.gameUI.board.BoardSize; i++) {
 	            Square square = super.getSquare().getBoardSquare(row, i);
-	            if (square.getPiece() == null) {
-	                possibleMoves.add(square);
-	            } else if (isOpponent(square.getPiece())) {
-	                possibleMoves.add(square);
-	                break;
-	            } else {
-	                break;
+	            if(allPossiblerightMovesFound){
+	        		BlockedMoves.add(square);
+	        		if(rightMovesBlockedByKing){
+	        			BlockedByKingMoves.add(square);
+	        		}
+	            }
+	        	else{
+	            	   if (square.getPiece() == null) {
+	   	                possibleMoves.add(square);
+	   	            } else if (isOpponent(square.getPiece())) {
+	   	                possibleMoves.add(square);
+	   	             if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            	rightMovesBlockedByKing = true;
+	   	            	}
+	   	             allPossiblerightMovesFound = true;
+	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            	allPossiblerightMovesFound = true;
+	   	         	    BlockedMoves.add(square);
+	   	         	    AttackMoves.add(square);
+	   	            } else {
+	   	            	allPossiblerightMovesFound = true;
+	   	            }
 	            }
 	        }
 	        //all possible moves to the left
+	        boolean allPossibleleftMovesFound = false;
+	        boolean leftMovesBlockedByKing = false;
 	        for (int i = column - 1; i > -1; i--) {
 	            Square square = super.getSquare().getBoardSquare(row, i);
-	            if (square.getPiece() == null) {
-	                possibleMoves.add(square);
-	            } else if (isOpponent(square.getPiece())) {
-	                possibleMoves.add(square);
-	                break;
-	            } else {
-	                break;
+	            if(allPossibleleftMovesFound){
+	        		BlockedMoves.add(square);
+	        		if(leftMovesBlockedByKing){
+	        			BlockedByKingMoves.add(square);
+	        		}
+	            }
+	        	else{
+	            	   if (square.getPiece() == null) {
+	   	                possibleMoves.add(square);
+	   	            } else if (isOpponent(square.getPiece())) {
+	   	                possibleMoves.add(square);
+	   	             if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            	leftMovesBlockedByKing = true;
+	   	            	}
+	   	             allPossibleleftMovesFound = true;
+	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            	allPossibleleftMovesFound = true;
+	   	         	    BlockedMoves.add(square);
+	   	         	    AttackMoves.add(square);
+	   	            } else {
+	   	            	allPossibleleftMovesFound = true;
+	   	            }
 	            }
 	        }
 	        AttackMoves = possibleMoves;

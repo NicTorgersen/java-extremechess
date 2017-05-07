@@ -21,8 +21,9 @@ public class Queen extends ChessPiece {
 
 	@Override
 	public Collection<Square> generatePossibleMoves() {
-	     possibleMoves.clear();
-	     AttackMoves.clear();
+	    // possibleMoves.clear();
+	    // AttackMoves.clear();
+	     //BlockedMoves.clear();
 	     ChessPiece[] pieces = {
 	    		new Rook(this.player, this.getSquare(), true),
 	    		new Bishop(this.player, this.getSquare(), true), 
@@ -30,6 +31,8 @@ public class Queen extends ChessPiece {
 	        for (ChessPiece piece : pieces) {
 	            //piece.setSquare(getSquare());
 	                possibleMoves.addAll(piece.generatePossibleMoves());
+	                BlockedMoves.addAll(piece.getBlockedMoves());
+	                BlockedByKingMoves.addAll(piece.getBlockedByKingMoves());
 
 	
 	        }

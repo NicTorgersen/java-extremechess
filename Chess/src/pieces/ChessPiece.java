@@ -24,6 +24,14 @@ import ui.Board;
 import ui.Square;
 
 public abstract class ChessPiece extends JPanel implements MouseListener  {
+	//Offensive
+	//public boolean blockedByKing;
+	//Defensive
+	private boolean protectsKing;
+	
+	protected Collection<Square> AllMoves;
+	protected Collection<Square> BlockedByKingMoves;
+	protected Collection<Square> BlockedMoves;
 	protected Collection<Square> possibleMoves;
 	protected Collection<Square> AttackMoves;
 	public ChessGame.Player player;
@@ -68,6 +76,23 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
        currentSquare = s;
     }
     
+    public Collection<Square> getAllMoves() {
+    	AllMoves.clear();
+    	AllMoves.addAll(getPossibleMoves());
+    	AllMoves.addAll(getAttackMoves());
+    	AllMoves.addAll(getBlockedMoves());
+    	return AllMoves;
+	}
+    
+    public Collection<Square> getBlockedByKingMoves() {
+	    return BlockedByKingMoves;
+	}
+    
+    public Collection<Square> getBlockedMoves() {
+	    return BlockedMoves;
+	}
+    
+    
     public Collection<Square> getAttackMoves() {
 	    return AttackMoves;
 	}
@@ -75,11 +100,18 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 	public Collection<Square> getPossibleMoves() {
 	    return possibleMoves;
 	}
+	//
+	public void SetAsProtectorForKing(boolean state){
+		protectsKing = state;
+	}
 	
 	
 	public ChessPiece(ChessGame.Player p, Square sq, Boolean isVirtual){
+      AllMoves = new ArrayList<>();
 	  possibleMoves = new ArrayList<>();
 	  AttackMoves = new ArrayList<>();
+	  BlockedMoves = new ArrayList<>();
+	  BlockedByKingMoves = new ArrayList<>();
 	  player = p;
 	  setSquare(sq);
 	  
@@ -98,7 +130,7 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 
       }
 
-      generatePossibleMoves();
+      //generatePossibleMoves();
 
 	}
 	
@@ -147,21 +179,47 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 
 		
 		
-		 for (Square fruit : getPossibleMoves()) {
-	        	fruit.setColorToInitial();
+		 for (Square squ : getAllMoves()) {
+			 squ.setColorToInitial();
 	            // fruit is an element of the `fruits` array.
 	        }
-		 generatePossibleMoves();
+		 
+		  possibleMoves.clear();
+		     AttackMoves.clear();
+		     BlockedMoves.clear();
+		     BlockedByKingMoves.clear();
+		 //generatePossibleMoves();
 	     chessGame.switchTurn();
 	}
 	
 	public void DeselectPiece(){
 		 chessGame.setSelectedPiece(null);
 		 currentSquare.setColorToInitial();
-		 for (Square fruit : getPossibleMoves()) {
+		 for (Square fruit : getAllMoves()) {
 	        	fruit.setColorToInitial();
 	            // fruit is an element of the `fruits` array.
 	        }
+	}
+	
+	public void CheckifHasEnemyKingInCheck(){
+		King k;
+		 if(player == ChessGame.Player.white){
+			k = chessGame.getBlackKing();
+		 }else{
+		    k = chessGame.getWhiteKing();
+		 }
+		 
+		 for (Square piece : getAttackMoves()) {
+			 if(piece.id == k.getSquare().id && piece.rowNumber == k.getSquare().rowNumber){
+				 System.out.println("Sets king in check");
+				 k.SetKingInCheck(this);
+				
+			 }
+	        }
+		 
+		// if(this.getAttackMoves().contains(k.getSquare())){
+			
+		// }
 	}
 	
 	public void Autoselect(){
@@ -170,9 +228,7 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 	
 	private void piecePressed(){
 		
-		if(chessGame.kingIsInCheck && this.piecetype != piecetype.king ){
-			return;
-		}
+		
 		
 		//if(chessGame.playerHasSelectedPiece() && chessGame._PlayersTurn != this.player){
 		if(chessGame.playerHasSelectedPiece() && isOpponent(chessGame.getSelectedPiece())){
@@ -183,6 +239,11 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 					removePieceFromPlayer();
 			}
 		} 
+		
+		else if(chessGame.kingIsInCheck && this.piecetype != piecetype.king ){
+			return;
+		}
+		
 		else if(chessGame._PlayersTurn == this.player) {
 			
 			if(chessGame.playerHasSelectedPiece()){
@@ -191,15 +252,29 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 			
 			currentSquare.setBackground(Color.YELLOW);
 	        chessGame.setSelectedPiece(this);
+	        possibleMoves.clear();
+		     AttackMoves.clear();
+		     BlockedMoves.clear();
+		     BlockedByKingMoves.clear();
 	        Collection<Square> s =  generatePossibleMoves();
 	        
-	        for (Square fruit : s) {
-	        	fruit.setColorAsGreen();
+	        for (Square sq : s) {
+	        	sq.setColorAsGreen();
 	        	
-	        	if(isOpponent(fruit.getPiece())){
-	        		fruit.setColorAsRed();
+	        	if(isOpponent(sq.getPiece())){
+	        		sq.setColorAsRed();
 		        	
 	        	}
+	            // fruit is an element of the `fruits` array.
+	        }
+	        
+	        for (Square fruit : BlockedMoves) {
+	        	fruit.setColorAsGray();
+	        	
+	        	//if(isOpponent(fruit.getPiece())){
+	        	//	fruit.setColorAsRed();
+		        	
+	        	//}
 	            // fruit is an element of the `fruits` array.
 	        }
 		}	

@@ -57,7 +57,7 @@ public class Pawn extends ChessPiece {
 	         	AttackMoves.add(aheadRight);
 	         	  if (aheadRight.getPiece() != null && isOpponent(aheadRight.getPiece())) {
 	  	        	System.out.println("Right enemy");
-	  	         	AttackMoves.add(aheadRight);
+	  	         	//AttackMoves.add(aheadRight);
 	  	            possibleMoves.add(aheadRight);
 	  	        }
 	  	        

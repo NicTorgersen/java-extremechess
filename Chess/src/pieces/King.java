@@ -16,39 +16,49 @@ public class King extends ChessPiece {
 	
 	protected Collection<Square> EnemypossibleMoves;
 	boolean inCheck;
+	
+	private ChessPiece CheckPiece;
 
 	public King(ChessGame.Player p, Square sq, Boolean isVirtual) {
 		super(p, sq, isVirtual);
 		EnemypossibleMoves = new ArrayList<>(); 
 	}
 	
+	public void movePiece(Square sq){
+		super.movePiece(sq);
+		CheckPiece = null;
+	}
+	
+	public void SetKingInCheck(ChessPiece p){
+		CheckPiece = p;
+		chessGame.SetKingInCheck(this);
+	}
+	
 	public boolean checkIfKingIsInCheck(){
 		
-		Square square = super.getSquare();
+		Square square = getSquare();
 		
 		if(getEnemyAttackMoves().contains(square)){
-	     	  System.out.println("Sjakk" + this.player);
+	     	  System.out.println("Sjakk" + this.player + square.id + square.rowNumber);
 	     	  
 			return true;
 	  
 		}
 		
-		//for (Square possibleEnemyMove : getEnemypossibleMoves()) {
-			
-	    // }
 		  System.out.println("Ikkje sjakk" + this.player);
 		return false;
 	}
 	
 	 private Collection<Square> getEnemyAttackMoves() {
-
 		 Collection<Square> attackMoves = new ArrayList<>();
+		 
 		 if(this.player == ChessGame.Player.white){
 			 for (ChessPiece piece : chessGame.getBlackPieces()) {
 				  System.out.println("Henter alle svarte" + this.player);
 				  attackMoves.addAll(piece.getAttackMoves());
 		        }
-		 } else{
+		 } 
+		 else{
 			 for (ChessPiece piece : chessGame.getWhitePieces()) {
 				  System.out.println("Henter alle hvite" + this.player);
 				  attackMoves.addAll(piece.getAttackMoves());
@@ -59,28 +69,32 @@ public class King extends ChessPiece {
 		 
 		    return attackMoves;
 	 }
-	
-	// private Collection<Square> getEnemypossibleMoves() {
-		// EnemypossibleMoves.clear();
-		// if(this.player == ChessGame.Player.white){
-		//	 for (ChessPiece piece : chessGame.getBlackPieces()) {
-		//		  System.out.println("Henter alle svarte" + this.player);
-		//		 EnemypossibleMoves.addAll(piece.getPossibleMoves());
-		//        }
-		// } else{
-		//	 for (ChessPiece piece : chessGame.getWhitePieces()) {
-		//		  System.out.println("Henter alle hvite" + this.player);
-		//		 EnemypossibleMoves.addAll(piece.getPossibleMoves());
-				
-		//        }
-		// }
-		 
-		// EnemypossibleMoves.addAll(getEnemyAttackMoves());
-		 
-	//	    return EnemypossibleMoves;
-	// }
 		
+	 private List<Square> RemoveImpossibleMoves(List<Square> s){
+		 List<Square> newlist = new ArrayList<>();
+		 for (Square listsq : s) {
+			 newlist.add(listsq);
+			 for (Square enemysq : getEnemyAttackMoves()) {
+				 if(enemysq.id == listsq.id && enemysq.rowNumber == listsq.rowNumber){
+					 newlist.remove(listsq);
 
+				 }
+		        }
+			 }
+		 
+		 if(CheckPiece != null){
+			 for (Square listsq : s) {
+				 for (Square enemysq : CheckPiece.getBlockedByKingMoves()) {
+					 if(enemysq.id == listsq.id && enemysq.rowNumber == listsq.rowNumber){
+						 newlist.remove(listsq);
+
+					 }
+			        }
+				 }
+		 }
+		 
+		 return newlist;
+	 }
 	
 	 @Override
 	    public Collection<Square> generatePossibleMoves() {
@@ -100,19 +114,27 @@ public class King extends ChessPiece {
 	        for (int[] o : offsets) {
 	            Square square = super.getSquare().neighbour(o[0], o[1]);
 	            if (square != null && (square.getPiece() == null || isOpponent(square.getPiece()))) {
-	            	if(chessGame._PlayersTurn == this.player){
-	            	//	if(!getEnemyAttackMoves().contains(square)){
-		            	     moves.add(square);
-		            	//}
-	            	}
-	            }
+	            
+	            	//if(isOpponent(square.getPiece())){
+	            		  moves.add(square);
+	            //	} 
+	            }else if(square != null && square.getPiece() != null && !isOpponent(square.getPiece())){
+	              BlockedMoves.add(square);
+	              AttackMoves.add(square);
+          		 // moves.add(square);
+          	} 	
 	        }
-	        possibleMoves.addAll(moves);
+	        if(chessGame._PlayersTurn == this.player){
+	          possibleMoves.addAll(RemoveImpossibleMoves(moves));
+	       	}else{
+	       		possibleMoves.addAll(moves);
+	       	}
 	        AttackMoves = possibleMoves;
+	        if(inCheck && possibleMoves.size() <= 0){
+	        	
+	        }
 	        return possibleMoves;
 	    }
-
-
 
 	@Override
 	public Piecetype GetPieceType() {

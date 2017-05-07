@@ -89,6 +89,13 @@ public final class ChessGame {
 		gameUI.board.repaint();
 		gameUI.board.updateUI();
 		
+		 for (ChessPiece piece : getWhitePieces()) {
+			 piece.generatePossibleMoves();
+	        }
+		 for (ChessPiece piece : getBlackPieces()) {
+			 piece.generatePossibleMoves();
+	        }
+		
 
 	}
 	
@@ -117,7 +124,7 @@ public final class ChessGame {
 	public void setSelectedPiece(ChessPiece piece){
 		selectedChessPiece = piece;
 		if(selectedChessPiece != null){
-		    System.out.println("SelectedChessPiece" + " " + "is" + " " + piece.player.toString() + " " + piece.GetPieceType().toString());
+		    System.out.println("SelectedChessPiece" + " " + "is" + " " + piece.player.toString() + " " + piece.GetPieceType().toString() + "On square" + piece.getSquare().id + piece.getSquare().rowNumber);
 		}
      }
 	
@@ -140,35 +147,70 @@ public final class ChessGame {
 	public King getBlackKing(){
 		return blackKing;
 	}
+	
+	
+	public void SetKingInCheck(King k){
+		
+		if(k.player == Player.white){
+			 JOptionPane.showMessageDialog(this.gameUI, "White King in check");
+             kingIsInCheck = true;
+             getWhiteKing().Autoselect();
+				  System.out.println("White is in check");
+		}else{
+			   JOptionPane.showMessageDialog(this.gameUI, "Black King in check");
+			   kingIsInCheck = true;
+			   getBlackKing().Autoselect();
+			   System.out.println("Black is in check");
+		}
+	}
+	
+	public void SetKingInCheckMate(){
+		
+	}
+	
 
 	public void switchTurn() {
 		
+		if(kingIsInCheck){
+			kingIsInCheck = false;
+		}
+		
 		setSelectedPiece(null);
 	    System.out.println("Switching");
-	    gameUI.setTurnMessage(_PlayersTurn.toString()+"'"+"s" + " "+ "turn");
+
 		
 		if(_PlayersTurn == Player.white){
 			_PlayersTurn = Player.black;
-            if(getBlackKing().checkIfKingIsInCheck()){
-                JOptionPane.showMessageDialog(this.gameUI, "Black King in check");
-                kingIsInCheck = true;
-                getBlackKing().Autoselect();
-            	  System.out.println("Black is in check");
-			}else{
-				 kingIsInCheck = false;
-			}
+			 for (ChessPiece piece : getWhitePieces()) {
+				 piece.generatePossibleMoves();
+				 piece.CheckifHasEnemyKingInCheck();
+		        }
+         //   if(getBlackKing().checkIfKingIsInCheck()){
+           //     JOptionPane.showMessageDialog(this.gameUI, "Black King in check");
+            //    kingIsInCheck = true;
+           //     getBlackKing().Autoselect();
+           // 	  System.out.println("Black is in check");
+		//	}else{
+		//		 kingIsInCheck = false;
+		//	}
 		}else{
 			_PlayersTurn = Player.white;
-			if(getWhiteKing().checkIfKingIsInCheck()){
-                JOptionPane.showMessageDialog(this.gameUI, "White King in check");
-                kingIsInCheck = true;
-                getWhiteKing().Autoselect();
-				  System.out.println("White is in check");
-			}else{
-				   kingIsInCheck = false;
-			}
+			 for (ChessPiece piece : getBlackPieces()) {
+				 piece.generatePossibleMoves();
+				 piece.CheckifHasEnemyKingInCheck();
+		        }
+			//if(getWhiteKing().checkIfKingIsInCheck()){
+             //   JOptionPane.showMessageDialog(this.gameUI, "White King in check");
+             //   kingIsInCheck = true;
+             //   getWhiteKing().Autoselect();
+			//	  System.out.println("White is in check");
+			//}else{
+			//	   kingIsInCheck = false;
+			//}
 	
 		}
+		
+	    gameUI.setTurnMessage(_PlayersTurn.toString()+"'"+"s" + " "+ "turn");
 
 		// TODO Auto-generated method stub
 		
