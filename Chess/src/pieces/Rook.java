@@ -1,13 +1,8 @@
 package pieces;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
-
-import javax.imageio.ImageIO;
-
 import gamelogic.ChessGame;
-import pieces.ChessPiece.Piecetype;
 import ui.Square;
 
 public class Rook extends ChessPiece {
@@ -15,23 +10,15 @@ public class Rook extends ChessPiece {
 	public Rook(ChessGame.Player p, Square sq, Boolean isVirtual) {
 		super(p, sq, isVirtual);
 	}
-	
-	
-
-	
-
 	@Override
-	public Collection<Square> generatePossibleMoves() {
-		  int row = super.getSquare().rowNumber;
-	        int column = super.getSquare().id;
-	       // possibleMoves.clear();
-	       // AttackMoves.clear();
-	       // BlockedMoves.clear();
-	        //all possible moves in the up
+	public Collection<Square> generateMoves() {
+		  int rowNumber = super.getSquare().rowNumber;
+	      int rowID = super.getSquare().rowID;
+
 	        boolean allPossibleUpMovesFound = false;
 	        boolean upMovesBlockedByKing = false;
-	        for (int i = row + 1; i < ChessGame.gameUI.board.BoardSize; i++) {
-	         	Square square = super.getSquare().getBoardSquare(i, column);
+	        for (int i = rowNumber + 1; i < ChessGame.gameUI.board.BoardSize; i++) {
+	         	Square square = super.getSquare().getBoardSquare(i, rowID);
 	        	if(allPossibleUpMovesFound){
 	        		BlockedMoves.add(square);
 	        		if(upMovesBlockedByKing){
@@ -39,15 +26,15 @@ public class Rook extends ChessPiece {
 	        		}
 	            }
 	        	else{
-	            	   if (square.getPiece() == null) {
+	            	   if (square.getChessPiece() == null) {
 	   	                possibleMoves.add(square);
-	   	            } else if (isOpponent(square.getPiece())) {
-	   	            	if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            } else if (isEnemy(square.getChessPiece())) {
+	   	            	if(square.getChessPiece().GetPieceType() == piecetype.king){
 	   	            		upMovesBlockedByKing = true;
 	   	            	}
 	   	                possibleMoves.add(square);
 	   	                allPossibleUpMovesFound = true;
-	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            }else if (!isEnemy(square.getChessPiece())) {
 	   	                allPossibleUpMovesFound = true;
 	   	                AttackMoves.add(square);
 	   	         	    BlockedMoves.add(square);
@@ -55,15 +42,12 @@ public class Rook extends ChessPiece {
 	   	            	allPossibleUpMovesFound = true;
 	   	            }
 	            }
-	        	
-	       
-	         
 	        }
 	        //all possible moves in the down
 	        boolean allPossibledownMovesFound = false;
 	        boolean downMovesBlockedByKing = false;
-	        for (int i = row - 1; i > -1; i--) {
-	            Square square = super.getSquare().getBoardSquare(i, column);
+	        for (int i = rowNumber - 1; i > -1; i--) {
+	            Square square = super.getSquare().getBoardSquare(i, rowID);
 	            if(allPossibledownMovesFound){
 	        		BlockedMoves.add(square);
 	        		if(downMovesBlockedByKing){
@@ -71,15 +55,15 @@ public class Rook extends ChessPiece {
 	        		}
 	            }
 	        	else{
-	            	   if (square.getPiece() == null) {
+	            	   if (square.getChessPiece() == null) {
 	   	                possibleMoves.add(square);
-	   	            } else if (isOpponent(square.getPiece())) {
-	   	            	if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            } else if (isEnemy(square.getChessPiece())) {
+	   	            	if(square.getChessPiece().GetPieceType() == piecetype.king){
 	   	            		downMovesBlockedByKing = true;
 	   	            	}
 	   	                possibleMoves.add(square);
 	   	             allPossibledownMovesFound = true;
-	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            }else if (!isEnemy(square.getChessPiece())) {
 	   	            	allPossibledownMovesFound = true;
 	   	         	    BlockedMoves.add(square);
 	   	         	    AttackMoves.add(square);
@@ -91,8 +75,8 @@ public class Rook extends ChessPiece {
 	        //all possible moves to the right
 	        boolean allPossiblerightMovesFound = false;
 	        boolean rightMovesBlockedByKing = false;
-	        for (int i = column + 1; i < ChessGame.gameUI.board.BoardSize; i++) {
-	            Square square = super.getSquare().getBoardSquare(row, i);
+	        for (int i = rowID + 1; i < ChessGame.gameUI.board.BoardSize; i++) {
+	            Square square = super.getSquare().getBoardSquare(rowNumber, i);
 	            if(allPossiblerightMovesFound){
 	        		BlockedMoves.add(square);
 	        		if(rightMovesBlockedByKing){
@@ -100,15 +84,15 @@ public class Rook extends ChessPiece {
 	        		}
 	            }
 	        	else{
-	            	   if (square.getPiece() == null) {
+	            	   if (square.getChessPiece() == null) {
 	   	                possibleMoves.add(square);
-	   	            } else if (isOpponent(square.getPiece())) {
+	   	            } else if (isEnemy(square.getChessPiece())) {
 	   	                possibleMoves.add(square);
-	   	             if(square.getPiece().GetPieceType() == piecetype.king){
+	   	             if(square.getChessPiece().GetPieceType() == piecetype.king){
 	   	            	rightMovesBlockedByKing = true;
 	   	            	}
 	   	             allPossiblerightMovesFound = true;
-	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            }else if (!isEnemy(square.getChessPiece())) {
 	   	            	allPossiblerightMovesFound = true;
 	   	         	    BlockedMoves.add(square);
 	   	         	    AttackMoves.add(square);
@@ -120,8 +104,8 @@ public class Rook extends ChessPiece {
 	        //all possible moves to the left
 	        boolean allPossibleleftMovesFound = false;
 	        boolean leftMovesBlockedByKing = false;
-	        for (int i = column - 1; i > -1; i--) {
-	            Square square = super.getSquare().getBoardSquare(row, i);
+	        for (int i = rowID - 1; i > -1; i--) {
+	            Square square = super.getSquare().getBoardSquare(rowNumber, i);
 	            if(allPossibleleftMovesFound){
 	        		BlockedMoves.add(square);
 	        		if(leftMovesBlockedByKing){
@@ -129,15 +113,15 @@ public class Rook extends ChessPiece {
 	        		}
 	            }
 	        	else{
-	            	   if (square.getPiece() == null) {
+	            	   if (square.getChessPiece() == null) {
 	   	                possibleMoves.add(square);
-	   	            } else if (isOpponent(square.getPiece())) {
+	   	            } else if (isEnemy(square.getChessPiece())) {
 	   	                possibleMoves.add(square);
-	   	             if(square.getPiece().GetPieceType() == piecetype.king){
+	   	             if(square.getChessPiece().GetPieceType() == piecetype.king){
 	   	            	leftMovesBlockedByKing = true;
 	   	            	}
 	   	             allPossibleleftMovesFound = true;
-	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            }else if (!isEnemy(square.getChessPiece())) {
 	   	            	allPossibleleftMovesFound = true;
 	   	         	    BlockedMoves.add(square);
 	   	         	    AttackMoves.add(square);
@@ -146,21 +130,17 @@ public class Rook extends ChessPiece {
 	   	            }
 	            }
 	        }
-	        AttackMoves = possibleMoves;
+	        AttackMoves.addAll(possibleMoves);
 	        return possibleMoves;
 	}
-
 	@Override
 	public Piecetype GetPieceType() {
-		// TODO Auto-generated method stub
 		return  piecetype = Piecetype.rook;
 	}
-
 	@Override
 	public String GetImagePathBlack() {
 		return "Bin" + File.separator + "blackpieces"+ File.separator + "RookBlack.png";
 	}
-
 	@Override
 	public String GetImagePathWhite() {
 		return "Bin" + File.separator + "whitepieces"+ File.separator + "RookWhite.png";

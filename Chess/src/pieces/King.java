@@ -1,57 +1,38 @@
 package pieces;
+
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 import gamelogic.ChessGame;
-import pieces.ChessPiece.Piecetype;
 import ui.Square;
 
-
 public class King extends ChessPiece {
-	
+	//Stores all AttackMoves that the enemy can do next round
 	protected Collection<Square> EnemypossibleMoves;
-	boolean inCheck;
-	
+	//The ChessPiece that has the king in Check
 	private ChessPiece CheckPiece;
-
+	
 	public King(ChessGame.Player p, Square sq, Boolean isVirtual) {
 		super(p, sq, isVirtual);
 		EnemypossibleMoves = new ArrayList<>(); 
+		ImpossibleMoves = new ArrayList<>(); 
 	}
-	
+	//Moves the King, and sets CheckPiece to null if there is one
 	public void movePiece(Square sq){
 		super.movePiece(sq);
-		CheckPiece = null;
+		if(CheckPiece != null){
+			CheckPiece = null;
+		}
 	}
-	
+	//Given ChessPiece sets this king in check, and tells the chessGame that it is held in check.
 	public void SetKingInCheck(ChessPiece p){
 		CheckPiece = p;
 		chessGame.SetKingInCheck(this);
 	}
-	
-	public boolean checkIfKingIsInCheck(){
-		
-		Square square = getSquare();
-		
-		if(getEnemyAttackMoves().contains(square)){
-	     	  System.out.println("Sjakk" + this.player + square.id + square.rowNumber);
-	     	  
-			return true;
-	  
-		}
-		
-		  System.out.println("Ikkje sjakk" + this.player);
-		return false;
-	}
-	
+	// Returns all possible enemyAttackMoves (Which have been generated at the start of this turn).
 	 private Collection<Square> getEnemyAttackMoves() {
 		 Collection<Square> attackMoves = new ArrayList<>();
-		 
 		 if(this.player == ChessGame.Player.white){
 			 for (ChessPiece piece : chessGame.getBlackPieces()) {
 				  System.out.println("Henter alle svarte" + this.player);
@@ -64,44 +45,39 @@ public class King extends ChessPiece {
 				  attackMoves.addAll(piece.getAttackMoves());
 		        }
 		 }
-		 
-		  System.out.println(attackMoves.size() + "Size");
-		 
-		    return attackMoves;
+		 return attackMoves;
 	 }
-		
+	 //Removes all impossible moves from given list of squares	
 	 private List<Square> RemoveImpossibleMoves(List<Square> s){
 		 List<Square> newlist = new ArrayList<>();
 		 for (Square listsq : s) {
 			 newlist.add(listsq);
 			 for (Square enemysq : getEnemyAttackMoves()) {
-				 if(enemysq.id == listsq.id && enemysq.rowNumber == listsq.rowNumber){
+				 if(enemysq.rowID == listsq.rowID && enemysq.rowNumber == listsq.rowNumber){
 					 newlist.remove(listsq);
-
+					 ImpossibleMoves.add(listsq);
 				 }
 		        }
 			 }
-		 
+		 //If checkPiece is not null, we remove the path that this king is blocking, from possible moves. (Mainly the path of Bishop, Rook and Queen)
 		 if(CheckPiece != null){
 			 for (Square listsq : s) {
 				 for (Square enemysq : CheckPiece.getBlockedByKingMoves()) {
-					 if(enemysq.id == listsq.id && enemysq.rowNumber == listsq.rowNumber){
+					 if(enemysq.rowID == listsq.rowID && enemysq.rowNumber == listsq.rowNumber){
 						 newlist.remove(listsq);
-
 					 }
 			        }
 				 }
 		 }
-		 
 		 return newlist;
 	 }
 	
-	 @Override
-	    public Collection<Square> generatePossibleMoves() {
+	    @Override
+	    public Collection<Square> generateMoves() {
 		   possibleMoves.clear();
 		   AttackMoves.clear();
 	        List<Square> moves = new ArrayList<>();
-	        int[][] offsets = {
+	        int[][] possibleSquareints = {
 	            {1, 0},
 	            {0, 1},
 	            {-1, 0},
@@ -111,44 +87,42 @@ public class King extends ChessPiece {
 	            {-1, -1},
 	            {1, -1}
 	        };
-	        for (int[] o : offsets) {
+	        for (int[] o : possibleSquareints) {
 	            Square square = super.getSquare().neighbour(o[0], o[1]);
-	            if (square != null && (square.getPiece() == null || isOpponent(square.getPiece()))) {
-	            
-	            	//if(isOpponent(square.getPiece())){
+	            if (square != null && (square.getChessPiece() == null || isEnemy(square.getChessPiece()))) {
 	            		  moves.add(square);
-	            //	} 
-	            }else if(square != null && square.getPiece() != null && !isOpponent(square.getPiece())){
+
+	            }else if(square != null && square.getChessPiece() != null && !isEnemy(square.getChessPiece())){
 	              BlockedMoves.add(square);
-	              AttackMoves.add(square);
-          		 // moves.add(square);
+	              if(chessGame._PlayersTurn != this.player){
+	            	    AttackMoves.add(square);
+	    	       	}
           	} 	
 	        }
 	        if(chessGame._PlayersTurn == this.player){
 	          possibleMoves.addAll(RemoveImpossibleMoves(moves));
+	          AttackMoves.addAll(RemoveImpossibleMoves(moves));
 	       	}else{
 	       		possibleMoves.addAll(moves);
+	       		AttackMoves.addAll(moves);
 	       	}
-	        AttackMoves = possibleMoves;
-	        if(inCheck && possibleMoves.size() <= 0){
-	        	
+	        //If the king can't move anywhere, we tell the chessGame to set this king in CheckMate
+	        if(chessGame.kingIsInCheck() && possibleMoves.size() <= 0){
+	        	chessGame.SetKingInCheckMate(this);
 	        }
 	        return possibleMoves;
 	    }
-
+	 
 	@Override
 	public Piecetype GetPieceType() {
 		return  piecetype = Piecetype.king;
 	}
-
 	@Override
 	public String GetImagePathBlack() {
 		return "Bin" + File.separator + "blackpieces"+ File.separator + "KingBlack.png";
 	}
-
 	@Override
 	public String GetImagePathWhite() {
 		return "Bin" + File.separator + "whitepieces"+ File.separator + "KingWhite.png";
 	}
-
 }

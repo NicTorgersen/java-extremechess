@@ -1,14 +1,8 @@
 package pieces;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
-
-import javax.imageio.ImageIO;
-
 import gamelogic.ChessGame;
-
-import pieces.ChessPiece.Piecetype;
 import ui.Square;
 
 public class Bishop extends ChessPiece {
@@ -16,12 +10,11 @@ public class Bishop extends ChessPiece {
 	public Bishop(ChessGame.Player p, Square sq, Boolean isVirtual) {
 		super(p, sq, isVirtual);
 	}
-	
-
+	//Generates the Bishops moves
 	@Override
-	public Collection<Square> generatePossibleMoves() {
+	public Collection<Square> generateMoves() {
 		 int row = super.getSquare().rowNumber;
-	        int column = super.getSquare().id;
+	        int column = super.getSquare().rowID;
 	        possibleMoves.clear();
 	        AttackMoves.clear();
 	        //all possible moves in the down positive diagonal
@@ -36,15 +29,15 @@ public class Bishop extends ChessPiece {
 	        		}
 	            }
 	        	else{
-	            	   if (square.getPiece() == null) {
+	            	   if (square.getChessPiece() == null) {
 	   	                possibleMoves.add(square);
-	   	            } else if (isOpponent(square.getPiece())) {
-	   	            	if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            } else if (isEnemy(square.getChessPiece())) {
+	   	            	if(square.getChessPiece().GetPieceType() == piecetype.king){
 	   	            		downDiagonalMovesBlockedByKing = true;
 	   	            	}
 	   	                possibleMoves.add(square);
 	   	             allPossibleDownDiagonalMovesFound = true;
-	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            }else if (!isEnemy(square.getChessPiece())) {
 	   	            	allPossibleDownDiagonalMovesFound = true;
 	   	         	    BlockedMoves.add(square);
 	   	         	    AttackMoves.add(square);
@@ -65,15 +58,15 @@ public class Bishop extends ChessPiece {
 	        		}
 	            }
 	        	else{
-	            	   if (square.getPiece() == null) {
+	            	   if (square.getChessPiece() == null) {
 	   	                possibleMoves.add(square);
-	   	            } else if (isOpponent(square.getPiece())) {
-	   	            	if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            } else if (isEnemy(square.getChessPiece())) {
+	   	            	if(square.getChessPiece().GetPieceType() == piecetype.king){
 	   	            		upDiagonalMovesBlockedByKing = true;
 	   	            	}
 	   	                possibleMoves.add(square);
 	   	             allPossibleUpDiagonalMovesFound = true;
-	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            }else if (!isEnemy(square.getChessPiece())) {
 	   	            	allPossibleUpDiagonalMovesFound = true;
 	   	         	    BlockedMoves.add(square);
 	   	         	    AttackMoves.add(square);
@@ -94,15 +87,15 @@ public class Bishop extends ChessPiece {
 	        		}
 	            }
 	        	else{
-	            	   if (square.getPiece() == null) {
+	            	   if (square.getChessPiece() == null) {
 	   	                possibleMoves.add(square);
-	   	            } else if (isOpponent(square.getPiece())) {
-	   	            	if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            } else if (isEnemy(square.getChessPiece())) {
+	   	            	if(square.getChessPiece().GetPieceType() == piecetype.king){
 	   	            		upNegativeDiagonalMovesBlockedByKing = true;
 	   	            	}
 	   	                possibleMoves.add(square);
 	   	             allPossibleUpNegativeDiagonalMovesFound = true;
-	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            }else if (!isEnemy(square.getChessPiece())) {
 	   	            	allPossibleUpNegativeDiagonalMovesFound = true;
 	   	         	    BlockedMoves.add(square);
 	   	         	    AttackMoves.add(square);
@@ -123,15 +116,15 @@ public class Bishop extends ChessPiece {
 	        		}
 	            }
 	        	else{
-	            	   if (square.getPiece() == null) {
+	            	   if (square.getChessPiece() == null) {
 	   	                possibleMoves.add(square);
-	   	            } else if (isOpponent(square.getPiece())) {
-	   	            	if(square.getPiece().GetPieceType() == piecetype.king){
+	   	            } else if (isEnemy(square.getChessPiece())) {
+	   	            	if(square.getChessPiece().GetPieceType() == piecetype.king){
 	   	            		downNegativeDiagonalMovesBlockedByKing = true;
 	   	            	}
 	   	                possibleMoves.add(square);
 	   	             allPossibleDownNegativeDiagonalMovesFound = true;
-	   	            }else if (!isOpponent(square.getPiece())) {
+	   	            }else if (!isEnemy(square.getChessPiece())) {
 	   	            	allPossibleDownNegativeDiagonalMovesFound = true;
 	   	         	    BlockedMoves.add(square);
 	   	         	    AttackMoves.add(square); 
@@ -140,23 +133,18 @@ public class Bishop extends ChessPiece {
 	   	            }
 	            }
 	        }
-	        AttackMoves = possibleMoves;
+	        AttackMoves.addAll(possibleMoves);
 	        return possibleMoves;
 	}
 
 	@Override
 	public Piecetype GetPieceType() {
-		// TODO Auto-generated method stub
 		return  piecetype = Piecetype.bishop;
 	}
-
-
 	@Override
 	public String GetImagePathBlack() {
 		return "Bin" + File.separator + "blackpieces"+ File.separator + "BishopBlack.png";
 	}
-
-
 	@Override
 	public String GetImagePathWhite() {
 		return "Bin" + File.separator + "whitepieces"+ File.separator + "BishopWhite.png";

@@ -1,13 +1,8 @@
 package pieces;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
-
-import javax.imageio.ImageIO;
-
 import gamelogic.ChessGame;
-import pieces.ChessPiece.Piecetype;
 import ui.Square;
 
 public class Queen extends ChessPiece {
@@ -15,42 +10,29 @@ public class Queen extends ChessPiece {
 	public Queen(ChessGame.Player p, Square sq, Boolean isVirtual) {
 		super(p, sq, isVirtual);
 	}
-	
-
-
-
+	//The Queen uses virtual versions of Rook and Bishop to generate a path based on their movement logic. (Their constructor is set to be virtual)
 	@Override
-	public Collection<Square> generatePossibleMoves() {
-	    // possibleMoves.clear();
-	    // AttackMoves.clear();
-	     //BlockedMoves.clear();
+	public Collection<Square> generateMoves() {
 	     ChessPiece[] pieces = {
 	    		new Rook(this.player, this.getSquare(), true),
 	    		new Bishop(this.player, this.getSquare(), true), 
 	        };
 	        for (ChessPiece piece : pieces) {
-	            //piece.setSquare(getSquare());
-	                possibleMoves.addAll(piece.generatePossibleMoves());
+	                possibleMoves.addAll(piece.generateMoves());
 	                BlockedMoves.addAll(piece.getBlockedMoves());
 	                BlockedByKingMoves.addAll(piece.getBlockedByKingMoves());
-
-	
+	                AttackMoves.addAll(piece.getAttackMoves());
 	        }
-	        AttackMoves = possibleMoves;
 	        return possibleMoves;
 	}
-
 	@Override
 	public Piecetype GetPieceType() {
-		// TODO Auto-generated method stub
 		return  piecetype = Piecetype.queen;
 	}
-
 	@Override
 	public String GetImagePathBlack() {
 		return "Bin" + File.separator + "blackpieces"+ File.separator + "QueenBlack.png";
 	}
-
 	@Override
 	public String GetImagePathWhite() {
 		return "Bin" + File.separator + "whitepieces"+ File.separator + "QueenWhite.png";

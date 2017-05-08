@@ -1,75 +1,33 @@
 package gamelogic;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
-import gamelogic.ChessGame.Player;
 import pieces.ChessPiece;
 import pieces.King;
 import ui.GameUI;
-import ui.Square;
 
 public final class ChessGame {
-	
 	public static GameUI gameUI;
-	
 	private List<ChessPiece> whitePieces = new ArrayList<ChessPiece>();
 	private List<ChessPiece> blackPieces = new ArrayList<ChessPiece>();
-	
 	private ChessPiece selectedChessPiece;
-	
 	private King whiteKing;
 	private King blackKing;
-	
 	public Player _PlayersTurn;
-	public Boolean kingIsInCheck = false;
-	
-	public List<ChessPiece> getPieces(Player p){
-		if(p == Player.white){
-			return whitePieces;
-		}else{
-			return blackPieces;
-		}
-	}
-	
-	public void removePiece(Player p, ChessPiece piece) {
-	
-
-		if(p == Player.white){
-			if(whitePieces.contains(piece))
-				whitePieces.remove(piece);
-			if((int)whitePieces.size() <= 0)
-				setWinner(Player.black);
-		}else{
-			if(blackPieces.contains(piece))
-				blackPieces.remove(piece);
-		    System.out.println(Integer.toString(blackPieces.size()));
-			if((int)blackPieces.size() <= 0)
-				setWinner(Player.white);
-		}
-	}
-	
-	private void setWinner(Player p) {
-		if(p == Player.white){
-             gameUI.headermessage.setText("White is the winner");
-             System.out.println("White is the winner");
-		}else{
-			 gameUI.headermessage.setText("Black is the winner");
-			    System.out.println("Black is the winner");
-		}
-	}
-
+	private Boolean kingIsInCheck = false;
 	public enum Player{
 		white,
 		black
 	}
 	
-	public void initiate(){
+	//Constructor. Initiates the game
+	public ChessGame(){
+		initiate();
+	}
+	//Initiates the Games UI and starts a new game
+	private void initiate(){
 	     gameUI = new GameUI(this);
-	  
          JFrame f = new JFrame("ExtremeChess");
          f.setResizable(false);
          f.add(gameUI.getGui());
@@ -80,39 +38,71 @@ public final class ChessGame {
          f.setVisible(true);
          newGame();
 	}
-	
-	public void newGame(){
+	//Removes given ChessPiece from given player
+	public void removePiece(Player p, ChessPiece piece) {
+		if(p == Player.white){
+			if(whitePieces.contains(piece))
+				whitePieces.remove(piece);
+		}else{
+			if(blackPieces.contains(piece))
+				blackPieces.remove(piece);
+		}
+	}
+	//Closes the game
+	public void CloseGame(){
+		System.exit(0);
+	}
+	//Resigns as current player. Next player is set as winner
+	public void ResignCurrentPlayer(){
+		if(_PlayersTurn == Player.white){
+			setWinner(Player.black);
+		}else{
+			setWinner(Player.white);
+		}
+	}
+	//Sets given player as winner
+	private void setWinner(Player p) {
+		if(p == Player.white){
+             gameUI.headermessage.setText("White is the winner");
+             System.out.println("White is the winner");
+		}else{
+			 gameUI.headermessage.setText("Black is the winner");
+			    System.out.println("Black is the winner");
+		}
+	}
+	//Starts a new game
+	private void newGame(){
+		kingIsInCheck = false;
 		_PlayersTurn = Player.white;
 		whitePieces.clear();
 		blackPieces.clear();
 		gameUI.board.setupNewGame();
-		gameUI.board.repaint();
-		gameUI.board.updateUI();
-		
 		 for (ChessPiece piece : getWhitePieces()) {
-			 piece.generatePossibleMoves();
+			 piece.generateMoves();
 	        }
 		 for (ChessPiece piece : getBlackPieces()) {
-			 piece.generatePossibleMoves();
+			 piece.generateMoves();
 	        }
-		
-
 	}
-	
+	//Resets the game
 	public void resetGame(){
 		for (int i = 0; i < blackPieces.size(); i++) {
-			blackPieces.get(i).ResetPiece();
+			blackPieces.get(i).resetPiece();
 		}
 		for (int i = 0; i < whitePieces.size(); i++) {
-			whitePieces.get(i).ResetPiece();
+			whitePieces.get(i).resetPiece();
 		}
 		newGame();
 	}
-	
+	//Returns the currently selected ChessPiece
 	public ChessPiece getSelectedPiece(){
 		return selectedChessPiece;
 	}
-	
+	//Returns the KingIsInCheck boolean
+	public boolean kingIsInCheck(){
+		return kingIsInCheck;
+	}
+	//Returns boolean based on if player has selected a ChessPiece
 	public boolean playerHasSelectedPiece(){
 		if(getSelectedPiece() != null){
 			return true;
@@ -120,14 +110,14 @@ public final class ChessGame {
 			return false;
 		}
 	}
-	
+	//Sets the given ChessPiece as selected
 	public void setSelectedPiece(ChessPiece piece){
 		selectedChessPiece = piece;
 		if(selectedChessPiece != null){
-		    System.out.println("SelectedChessPiece" + " " + "is" + " " + piece.player.toString() + " " + piece.GetPieceType().toString() + "On square" + piece.getSquare().id + piece.getSquare().rowNumber);
+		    System.out.println("SelectedChessPiece" + " " + "is" + " " + piece.player.toString() + " " + piece.GetPieceType().toString() + "On square" + piece.getSquare().rowID + piece.getSquare().rowNumber);
 		}
      }
-	
+	//Assigns given king to given player
 	public void SetKing(Player p, King king){
 		if(p == Player.white){
 			whiteKing = king;
@@ -135,118 +125,77 @@ public final class ChessGame {
 			blackKing = king;
 		}
 	}
-	
+	//Returns white players king
 	public King getWhiteKing(){
-		if(whiteKing != null){
-			  System.out.println("Henter hvit konge");
-		}
-
 		return whiteKing;
 	}
-	
+	//Returns black players king
 	public King getBlackKing(){
 		return blackKing;
 	}
-	
-	
+	//Sets given king in check
 	public void SetKingInCheck(King k){
-		
 		if(k.player == Player.white){
 			 JOptionPane.showMessageDialog(this.gameUI, "White King in check");
              kingIsInCheck = true;
-             getWhiteKing().Autoselect();
+             getWhiteKing().autoselect();
 				  System.out.println("White is in check");
 		}else{
 			   JOptionPane.showMessageDialog(this.gameUI, "Black King in check");
 			   kingIsInCheck = true;
-			   getBlackKing().Autoselect();
+			   getBlackKing().autoselect();
 			   System.out.println("Black is in check");
 		}
 	}
-	
-	public void SetKingInCheckMate(){
-		
+	//Sets given king in CheckMate. Ending this turn
+	public void SetKingInCheckMate(King k){
+		if(k.player == Player.white){
+			 JOptionPane.showMessageDialog(this.gameUI, "CheckMate! Black wins");
+		}else{
+			   JOptionPane.showMessageDialog(this.gameUI, "CHeckMate! White wins");
+		}
 	}
-	
-
+	//Switches turn between players
 	public void switchTurn() {
-		
 		if(kingIsInCheck){
 			kingIsInCheck = false;
 		}
-		
 		setSelectedPiece(null);
 	    System.out.println("Switching");
 
-		
 		if(_PlayersTurn == Player.white){
 			_PlayersTurn = Player.black;
 			 for (ChessPiece piece : getWhitePieces()) {
-				 piece.generatePossibleMoves();
-				 piece.CheckifHasEnemyKingInCheck();
+				 piece.generateMoves();
 		        }
-         //   if(getBlackKing().checkIfKingIsInCheck()){
-           //     JOptionPane.showMessageDialog(this.gameUI, "Black King in check");
-            //    kingIsInCheck = true;
-           //     getBlackKing().Autoselect();
-           // 	  System.out.println("Black is in check");
-		//	}else{
-		//		 kingIsInCheck = false;
-		//	}
+			 for (ChessPiece piece : getWhitePieces()) {
+				 piece.checkifHasEnemyKingInCheck();
+		        }
 		}else{
 			_PlayersTurn = Player.white;
 			 for (ChessPiece piece : getBlackPieces()) {
-				 piece.generatePossibleMoves();
-				 piece.CheckifHasEnemyKingInCheck();
+				 piece.generateMoves();
 		        }
-			//if(getWhiteKing().checkIfKingIsInCheck()){
-             //   JOptionPane.showMessageDialog(this.gameUI, "White King in check");
-             //   kingIsInCheck = true;
-             //   getWhiteKing().Autoselect();
-			//	  System.out.println("White is in check");
-			//}else{
-			//	   kingIsInCheck = false;
-			//}
-	
+			 for (ChessPiece piece : getBlackPieces()) {
+				 piece.checkifHasEnemyKingInCheck();
+		        }
 		}
-		
 	    gameUI.setTurnMessage(_PlayersTurn.toString()+"'"+"s" + " "+ "turn");
-
-		// TODO Auto-generated method stub
-		
 	}
-	
+	//Return the black pieces
 	public List<ChessPiece> getBlackPieces() {
 		return blackPieces;
 	}
-
-	public void setBlackPieces(List<ChessPiece> blackPieces) {
-		this.blackPieces = blackPieces;
-	}
-	
-	public void addBlackPieces(ChessPiece blackPiece) {
-		this.blackPieces.add(blackPiece);
-	}
-
+    //Returns the white pieces
 	public List<ChessPiece> getWhitePieces() {
 		return whitePieces;
 	}
-
-	public void setWhitePieces(List<ChessPiece> whitePieces) {
-		this.whitePieces = whitePieces;
-	}
-	
+    //Adds given piece to given player
 	public void addPieces(Player p, ChessPiece piece) {
 		if(p == Player.white){
 			this.whitePieces.add(piece);
 		}else{
 			this.blackPieces.add(piece);
 		}
-
 	}
-	
-	public void addWhitePieces(ChessPiece whitePiece) {
-		this.whitePieces.add(whitePiece);
-	}
-
 }
