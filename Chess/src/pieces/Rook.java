@@ -12,13 +12,13 @@ public class Rook extends ChessPiece {
 	}
 	@Override
 	public Collection<Square> generateMoves() {
-		  int rowNumber = super.getSquare().rowNumber;
-	      int rowID = super.getSquare().rowID;
+		  int rowNumber = getSquare().rowNumber;
+	      int rowID = getSquare().rowID;
 
 	        boolean allPossibleUpMovesFound = false;
 	        boolean upMovesBlockedByKing = false;
 	        for (int i = rowNumber + 1; i < ChessGame.gameUI.board.BoardSize; i++) {
-	         	Square square = super.getSquare().getBoardSquare(i, rowID);
+	         	Square square = getSquare().getBoardSquare(i, rowID);
 	        	if(allPossibleUpMovesFound){
 	        		BlockedMoves.add(square);
 	        		if(upMovesBlockedByKing){
@@ -47,7 +47,7 @@ public class Rook extends ChessPiece {
 	        boolean allPossibledownMovesFound = false;
 	        boolean downMovesBlockedByKing = false;
 	        for (int i = rowNumber - 1; i > -1; i--) {
-	            Square square = super.getSquare().getBoardSquare(i, rowID);
+	            Square square = getSquare().getBoardSquare(i, rowID);
 	            if(allPossibledownMovesFound){
 	        		BlockedMoves.add(square);
 	        		if(downMovesBlockedByKing){
@@ -76,7 +76,7 @@ public class Rook extends ChessPiece {
 	        boolean allPossiblerightMovesFound = false;
 	        boolean rightMovesBlockedByKing = false;
 	        for (int i = rowID + 1; i < ChessGame.gameUI.board.BoardSize; i++) {
-	            Square square = super.getSquare().getBoardSquare(rowNumber, i);
+	            Square square = getSquare().getBoardSquare(rowNumber, i);
 	            if(allPossiblerightMovesFound){
 	        		BlockedMoves.add(square);
 	        		if(rightMovesBlockedByKing){
@@ -105,7 +105,7 @@ public class Rook extends ChessPiece {
 	        boolean allPossibleleftMovesFound = false;
 	        boolean leftMovesBlockedByKing = false;
 	        for (int i = rowID - 1; i > -1; i--) {
-	            Square square = super.getSquare().getBoardSquare(rowNumber, i);
+	            Square square = getSquare().getBoardSquare(rowNumber, i);
 	            if(allPossibleleftMovesFound){
 	        		BlockedMoves.add(square);
 	        		if(leftMovesBlockedByKing){

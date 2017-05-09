@@ -38,7 +38,7 @@ public class Square extends JPanel implements MouseListener {
 	}
 	//Used by all pieces to display "possible moves" with enemies on the square"
     public void setColorAsRed(){
-        System.out.println("Red");
+        System.out.println("Enemy found on square nr"+" " + this.rowID + " " + "on row" + " " + this.rowNumber );
     	setBackground(Color.RED);
     }
     //Used by all pieces to display "possible moves"

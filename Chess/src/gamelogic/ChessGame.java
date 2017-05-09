@@ -69,6 +69,7 @@ public final class ChessGame {
 			 gameUI.headermessage.setText("Black is the winner");
 			    System.out.println("Black is the winner");
 		}
+		resetGame();
 	}
 	//Starts a new game
 	private void newGame(){
@@ -157,6 +158,7 @@ public final class ChessGame {
 	}
 	//Switches turn between players
 	public void switchTurn() {
+		gameUI.headermessage.setText("ASD-3000 eksamen");
 		if(kingIsInCheck){
 			kingIsInCheck = false;
 		}

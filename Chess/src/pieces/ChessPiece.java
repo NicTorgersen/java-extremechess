@@ -16,9 +16,8 @@ import gamelogic.ChessGame;
 import ui.Square;
 
 public abstract class ChessPiece extends JPanel implements MouseListener  {
-
-	private boolean protectsKing;
 	
+	//private boolean lockedByOtherPiece;
 	protected Collection<Square> AllMoves;
 	protected Collection<Square> ImpossibleMoves;
 	protected Collection<Square> BlockedByKingMoves;
@@ -96,9 +95,9 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 	    return possibleMoves;
 	}
 	//Sets this piece as protector for the king. Means that it can't move this round, as that would kill the king next round.
-	public void SetAsProtectorForKing(boolean state){
-		protectsKing = state;
-	}
+	//public void SetAsProtectorForKing(boolean state){
+	//	lockedByOtherPiece = state;
+	//}
 	//Initiates new lists for storing movement
 	private void newLists(){
 		  AllMoves = new ArrayList<>();
@@ -139,9 +138,13 @@ public abstract class ChessPiece extends JPanel implements MouseListener  {
 	}
 	//Resets this piece
 	public void resetPiece(){
-		newLists();
+		 for (Square squ : getAllMoves()) {
+			 squ.setColorToInitial();
+	        }
 		currentSquare.remove(this);
+		currentSquare.setColorToInitial();
 		currentSquare.RemoveChessPiece();
+		newLists();
 	}
 	//Moves the ChessPiece to given Square
 	public void movePiece(Square sq){

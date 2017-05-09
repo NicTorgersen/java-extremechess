@@ -35,13 +35,11 @@ public class King extends ChessPiece {
 		 Collection<Square> attackMoves = new ArrayList<>();
 		 if(this.player == ChessGame.Player.white){
 			 for (ChessPiece piece : chessGame.getBlackPieces()) {
-				  System.out.println("Henter alle svarte" + this.player);
 				  attackMoves.addAll(piece.getAttackMoves());
 		        }
 		 } 
 		 else{
 			 for (ChessPiece piece : chessGame.getWhitePieces()) {
-				  System.out.println("Henter alle hvite" + this.player);
 				  attackMoves.addAll(piece.getAttackMoves());
 		        }
 		 }

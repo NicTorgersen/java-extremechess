@@ -7,12 +7,7 @@ import ui.Square;
 
 public class Knight extends ChessPiece {
 	
-	public Knight(ChessGame.Player p, Square sq, Boolean isVirtual) {
-		super(p, sq, isVirtual);
-	}
-	@Override
-	public Collection<Square> generateMoves() {
-        int[][] possibleSquareints = {
+    private int[][] possibleSquareints = {
             {-2, 1},
             {-1, 2},
             {1, 2},
@@ -22,8 +17,14 @@ public class Knight extends ChessPiece {
             {-1, -2},
             {-2, -1}
         };
-        for (int[] o : possibleSquareints) {
-            Square square = super.getSquare().neighbour(o[0], o[1]);
+	
+	public Knight(ChessGame.Player p, Square sq, Boolean isVirtual) {
+		super(p, sq, isVirtual);
+	}
+	@Override
+	public Collection<Square> generateMoves() {
+        for (int[] psi : possibleSquareints) {
+            Square square = super.getSquare().neighbour(psi[0], psi[1]);
             if (square != null && (square.getChessPiece() == null || isEnemy(square.getChessPiece()))) {
                 possibleMoves.add(square);
             }

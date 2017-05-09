@@ -12,39 +12,39 @@ public class Pawn extends ChessPiece {
 	}
 	 @Override
 	    public Collection<Square> generateMoves() {
-	        possibleMoves.clear();
-	        AttackMoves.clear();
-	        boolean color = super.player == ChessGame.Player.white;
-	        int dx = color ? -1 : 1;
-	        Square ahead = super.getSquare().neighbour(dx, 0);
-	        if (ahead.getChessPiece() == null) {
-	            possibleMoves.add(ahead);
-	            if (super.getSquare().rowNumber == 6 && color) {
-	                Square aheadsecond = super.getSquare().neighbour(dx - 1, 0);
+	        int moveValue = 0;
+	        if(player == ChessGame.Player.white){
+	        	moveValue = -1;
+	        }else{
+	        	moveValue = 1;
+	        }
+	        Square path = getSquare().neighbour(moveValue, 0);
+	        if (path.getChessPiece() == null) {
+	            possibleMoves.add(path);
+	            if (getSquare().rowNumber == 6 && chessGame._PlayersTurn == ChessGame.Player.white) {
+	                Square aheadsecond = getSquare().neighbour(moveValue - 1, 0);
 	                if (aheadsecond.getChessPiece() == null) {
 	                    possibleMoves.add(aheadsecond);
 	                }
-	            } else if (super.getSquare().rowNumber == 1 && !color) {
-	                Square aheadsecond = super.getSquare().neighbour(dx + 1, 0);
+	            } else if (getSquare().rowNumber == 1 && chessGame._PlayersTurn == ChessGame.Player.black) {
+	                Square aheadsecond = getSquare().neighbour(moveValue + 1, 0);
 	                if (aheadsecond.getChessPiece() == null) {
 	                    possibleMoves.add(aheadsecond);
 	                }
 	            }
 	        }
-	        Square aheadLeft = super.getSquare().neighbour(dx, -1);
-	        if(aheadLeft != null){
-	        	AttackMoves.add(aheadLeft);
-	        	 if (aheadLeft.getChessPiece() != null && isEnemy(aheadLeft.getChessPiece())) {
-	 	            System.out.println("Left enemy");
-	 	            possibleMoves.add(aheadLeft);
+	        Square pathLeft = getSquare().neighbour(moveValue, -1);
+	        if(pathLeft != null){
+	        	AttackMoves.add(pathLeft);
+	        	 if (pathLeft.getChessPiece() != null && isEnemy(pathLeft.getChessPiece())) {
+	 	            possibleMoves.add(pathLeft);
 	 	        }
 	        }
-	        Square aheadRight = super.getSquare().neighbour(dx, 1);
-	        if(aheadRight != null){
-	         	AttackMoves.add(aheadRight);
-	         	  if (aheadRight.getChessPiece() != null && isEnemy(aheadRight.getChessPiece())) {
-	  	        	System.out.println("Right enemy");
-	  	            possibleMoves.add(aheadRight);
+	        Square pathRight = getSquare().neighbour(moveValue, 1);
+	        if(pathRight != null){
+	         	AttackMoves.add(pathRight);
+	         	  if (pathRight.getChessPiece() != null && isEnemy(pathRight.getChessPiece())) {
+	  	            possibleMoves.add(pathRight);
 	  	        }
 	        }
 	        return possibleMoves;

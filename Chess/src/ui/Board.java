@@ -26,7 +26,11 @@ public final class Board extends JPanel {
 	 public Board(ChessGame cg) {
 		 chessGame = cg;
 		 JPanel chessBoard = SetChessBoard();
-       }  
+       }
+	 
+	 public Square[][] getSquares(){
+		 return squares;
+	 }
 	 //Sets up and returns the board  
 	 public JPanel SetChessBoard(){
 		 JPanel chessBoard = new JPanel(new GridLayout(0, 9));
